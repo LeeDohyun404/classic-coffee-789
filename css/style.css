@@ -1,0 +1,237 @@
+/* ================================== */
+/* FONT & STYLING DASAR               */
+/* ================================== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600&display=swap');
+
+body {
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    color: #333;
+    background-color: #f4f7f6;
+}
+
+/* ================================== */
+/* HEADER & NAVIGASI                  */
+/* ================================== */
+header {
+    background: #8B4513; /* Warna Coklat Kopi */
+    color: white; /* Mengubah warna teks default di header menjadi putih */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    border-bottom: 1px solid #654321;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: white;
+    font-size: 1.8em;
+    font-weight: bold;
+    font-family: 'Playfair Display', serif;
+}
+
+.logo img {
+    height: 40px;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin-left: 35px;
+}
+
+nav ul li > a {
+    text-decoration: none;
+    color: #fff; /* Warna Teks Putih */
+    font-weight: 500;
+    padding: 20px 0;
+}
+
+/* Dropdown Menu Produk */
+nav ul li.dropdown-li {
+    position: relative;
+}
+
+nav ul li.dropdown-li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 90%;
+    left: -20px;
+    background-color: white;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    width: 220px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    z-index: 100;
+}
+
+nav ul li.dropdown-li:hover .dropdown-menu {
+    display: block;
+}
+
+nav ul li .dropdown-menu li {
+    margin: 0;
+    width: 100%;
+}
+
+nav ul li .dropdown-menu li a {
+    padding: 12px 20px;
+    display: block;
+    color: #555;
+    border-radius: 6px;
+}
+nav ul li .dropdown-menu li a:hover {
+    background-color: #f5f5f5;
+    color: #a0522d;
+}
+nav ul li a i.fa-caret-down {
+    margin-left: 5px;
+}
+
+/* Tombol Login/Logout di Header */
+.nav-login-item a.nav-login-btn,
+.nav-logout-item a.nav-logout-btn {
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+.nav-login-item a.nav-login-btn { background-color: #39cc0c; }
+.nav-logout-item a.nav-logout-btn { background-color: #dc3545; }
+.nav-login-item a.nav-login-btn:hover { background-color: #5a3a22; color: white; }
+.nav-logout-item a.nav-logout-btn:hover { background-color: #c82333; color: white; }
+
+/* Bar Loyalitas */
+.loyalty-bar {
+    background: #fff7ed;
+    padding: 12px 50px;
+    border-bottom: 1px solid #e0d5c6;
+}
+.loyalty-bar-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.welcome-text { font-size: 16px; font-weight: 500; color: #444; }
+.welcome-text strong { color: #8B4513; }
+.loyalty-display { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.loyalty-text { font-size: 14px; color: #666; font-style: italic; }
+.coffee-beans .bean { font-size: 1.3em; }
+.coffee-beans .bean.used { text-decoration: line-through; opacity: 0.5; }
+
+/* ================================== */
+/* KONTEN UTAMA & HALAMAN MENU        */
+/* ================================== */
+.container { display: flex; }
+main { flex: 1; padding: 30px 40px; }
+.home-container, .menu-page-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+.hero-section {
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../images/background.jpg');
+    height: 50vh; background-position: center; background-size: cover; border-radius: 15px;
+    display: flex; justify-content: center; align-items: center; text-align: center; color: white;
+}
+.hero-text h1 { color: white; font-family: 'Playfair Display', serif; font-size: 3em; }
+.hero-text p { font-size: 1.5em; }
+
+.featured-products, .menu-section { padding: 50px 0; }
+.featured-products h2, .menu-section h2, .menu-page-container h1 {
+    text-align: center; font-family: 'Playfair Display', serif;
+    font-size: 2.5em; color: #5a3a22; margin-bottom: 40px;
+}
+.menu-section h2 { text-align: left; border-bottom: 3px solid #a0522d; padding-bottom: 10px; }
+
+/* Grid & Kartu Produk */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+.product-card { background-color: #fff; border-radius: 12px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+.product-card:hover { transform: translateY(-8px); box-shadow: 0 10px 25px rgba(0,0,0,0.12); }
+.product-card img { width: 100%; height: 200px; object-fit: cover; }
+.product-card h4 { margin: 15px 10px 5px 10px; color: #5a3a22; font-family: 'Playfair Display', serif; font-size: 1.3em; min-height: 44px; }
+.product-card .description { font-size: 0.9em; color: #666; line-height: 1.5; padding: 0 15px; flex-grow: 1; min-height: 60px; }
+.product-card .price { font-size: 1.3em; font-weight: bold; color: #333; margin: 15px 10px; }
+
+/* Tombol Jumlah (+/-) */
+.add-to-cart-form { display: flex; flex-direction: column; gap: 12px; padding: 0 15px 20px 15px; margin-top: auto; }
+.quantity-container { display: flex; align-items: center; justify-content: center; }
+.quantity-btn {
+    background-color: #8B4513; /* Warna coklat kopi solid */
+    color: white;             /* Warna teks menjadi putih */
+    border: none;             /* Hapus border */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #A0522D; /* Warna coklat lebih terang saat disentuh */
+}
+.quantity-container .quantity-btn:first-child { border-radius: 8px 0 0 8px; }
+.quantity-container .quantity-btn:last-child { border-radius: 0 8px 8px 0; }
+.quantity-input { width: 60px; height: 40px; text-align: center; border: 1px solid #ccc; border-left: none; border-right: none; font-size: 16px; font-weight: 600; }
+.quantity-input::-webkit-outer-spin-button, .quantity-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.add-to-cart-form .btn-buy { border-radius: 8px; padding: 12px; font-size: 1em; background: #28a745; color: white; border:none; cursor: pointer; font-weight: 600; }
+/* Mengecilkan tombol di halaman keranjang */
+.checkout-container .btn {
+    padding: 10px 18px; /* Ukuran padding diperkecil */
+    font-size: 14px;      /* Ukuran font diperkecil */
+}
+/* Mengatur ulang lebar tombol di halaman keranjang */
+.checkout-container .btn {
+    width: auto; /* <-- Ini adalah perbaikan utamanya */
+    padding: 12px 25px; /* Sesuaikan padding agar terlihat bagus */
+    font-size: 15px;
+}
+/* ================================== */
+/* HALAMAN LOGIN/REGISTRASI           */
+/* ================================== */
+.login-container { width: 100%; max-width: 450px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; }
+.login-section { padding: 30px; }
+.login-section h2 { color: #5a3a22; margin-bottom: 20px; font-size: 1.5em; text-align: center; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+.form-group input { width: 100%; padding: 12px 15px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; }
+.btn { padding: 12px 20px; border: none; background: #8B4513; color: white; cursor: pointer; border-radius: 8px; text-align: center; text-decoration: none; display: block; width: 100%; font-weight: bold; font-size: 16px; }
+.back-link { text-align: center; margin-top: 20px; padding-top:20px; border-top:1px solid #eee; }
+.back-link a { color: #5a3a22; text-decoration: none; font-weight: 500; }
+
+/* ================================== */
+/* HALAMAN KERANJANG BELANJA          */
+/* ================================== */
+.cart-page-container { max-width: 900px; margin: 40px auto; padding: 20px; }
+.cart-page-container h1 { text-align: center; color: #5a3a22; margin-bottom: 30px; }
+.cart-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; box-shadow: 0 5px 25px rgba(0,0,0,0.08); overflow: hidden; }
+.cart-table th { background-color: #f8f9fa; padding: 18px 20px; text-align: left; text-transform: uppercase; color: #666; }
+.cart-table td { padding: 20px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+.product-info { display: flex; align-items: center; gap: 20px; }
+.product-info img { width: 70px; height: 70px; object-fit: cover; border-radius: 8px; }
+.product-info .product-name { font-weight: 600; }
+.checkout-container { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; }
+.btn-secondary { background-color: #6c757d; color: white; }
+
+/* ================================== */
+/* FOOTER                             */
+/* ================================== */
+footer { background-color: #333; color: #f4f4f4; padding: 40px 20px; margin-top: 50px; }
+.footer-content { display: flex; justify-content: center; text-align: center; max-width: 1100px; margin: auto; }
+.footer-section h3 { color: #FFE4B5; font-family: 'Playfair Display', serif; }
+.footer-section .contact span { display: block; margin-bottom: 8px; }
+.footer-section .socials a { color: #f4f4f4; margin: 0 10px; font-size: 1.5em; text-decoration: none; }
+.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #555; margin-top: 20px; }

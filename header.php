@@ -1,0 +1,894 @@
+<?php
+// Koneksi database harus dipanggil di sini agar semua halaman bisa menggunakannya
+require_once 'config.php';
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Coffee 789</title>
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<style>
+    /* ================================== */
+    /* FONT & BODY                        */
+    /* ================================== */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        color: #333;
+        background-color: #f4f7f6;
+    }
+
+    /* ================================== */
+    /* HEADER & NAVIGASI                  */
+    /* ================================== */
+    header {
+        background: #8B4513;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #654321;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        position: relative;
+        z-index: 999;
+    }
+
+    .logo a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: white;
+        font-size: 1.5em;
+        font-weight: bold;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+
+    /* Mobile Menu Toggle */
+    .mobile-menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    nav ul li {
+        margin-left: 35px;
+    }
+
+    nav ul li > a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 500;
+        padding: 20px 0;
+        display: block;
+    }
+
+    /* Dropdown Menu Produk */
+    nav ul li.dropdown-li {
+        position: relative;
+    }
+
+    nav ul li.dropdown-li .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 90%;
+        left: -20px;
+        background-color: white;
+        list-style: none;
+        padding: 10px;
+        margin: 0;
+        width: 220px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        border-radius: 10px;
+        z-index: 1000;
+    }
+
+    nav ul li.dropdown-li:hover .dropdown-menu {
+        display: block;
+    }
+
+    nav ul li .dropdown-menu li {
+        margin: 0;
+        width: 100%;
+    }
+
+    nav ul li .dropdown-menu li a {
+        padding: 12px 20px;
+        display: block;
+        color: #555;
+        border-radius: 6px;
+    }
+
+    nav ul li .dropdown-menu li a:hover {
+        background-color: #f5f5f5;
+        color: #a0522d;
+    }
+
+    nav ul li a i.fa-caret-down {
+        margin-left: 5px;
+    }
+
+    /* Tombol Login/Logout di Header */
+    .nav-login-item a.nav-login-btn,
+    .nav-logout-item a.nav-logout-btn {
+        color: white;
+        padding: 10px 22px;
+        border-radius: 20px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    .nav-login-item a.nav-login-btn { 
+        background-color: #39cc0c; 
+    }
+
+    .nav-logout-item a.nav-logout-btn { 
+        background-color: #dc3545; 
+    }
+
+    .nav-login-item a.nav-login-btn:hover { 
+        background-color: #5a3a22; 
+        color: white; 
+    }
+
+    .nav-logout-item a.nav-logout-btn:hover { 
+        background-color: #c82333; 
+        color: white; 
+    }
+
+    /* Bar Loyalitas */
+    .loyalty-bar {
+        background: #fff7ed;
+        padding: 12px 20px;
+        border-bottom: 1px solid #e0d5c6;
+    }
+
+    .loyalty-bar-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .welcome-text { 
+        font-size: 16px; 
+        font-weight: 500; 
+        color: #444; 
+    }
+
+    .welcome-text strong { 
+        color: #8B4513; 
+    }
+
+    .loyalty-display { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        font-size: 15px; 
+        flex-wrap: wrap;
+    }
+
+    .loyalty-text { 
+        font-size: 14px; 
+        color: #666; 
+        font-style: italic; 
+    }
+
+    .coffee-beans .bean { 
+        font-size: 1.3em; 
+    }
+
+    .coffee-beans .bean.used { 
+        text-decoration: line-through; 
+        opacity: 0.5; 
+    }
+
+    /* ================================== */
+    /* KONTEN UTAMA & HALAMAN MENU        */
+    /* ================================== */
+    .container { 
+        display: flex; 
+    }
+
+    main { 
+        flex: 1; 
+        padding: 30px 20px; 
+    }
+
+    .home-container, .menu-page-container { 
+        max-width: 1200px; 
+        margin: 30px auto; 
+        padding: 0 20px; 
+    }
+
+    .hero-section {
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?php echo BASE_URL; ?>/images/background.jpg') center/cover;
+    /* CSS lainnya */
+        height: 50vh; 
+        background-position: center; 
+        background-size: cover; 
+        border-radius: 15px;
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        text-align: center; 
+        color: white;
+        min-height: 300px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-text h1 { 
+        color: white; 
+        font-family: 'Playfair Display', serif; 
+        font-size: 3em; 
+        margin-bottom: 20px;
+    }
+
+    .hero-text p { 
+        font-size: 1.5em; 
+    }
+
+    .featured-products, .menu-section { 
+        padding: 50px 0; 
+    }
+
+    .featured-products h2, .menu-section h2, .menu-page-container h1 {
+        text-align: center; 
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5em; 
+        color: #5a3a22; 
+        margin-bottom: 40px;
+    }
+
+    .menu-section h2 { 
+        text-align: left; 
+        border-bottom: 3px solid #a0522d; 
+        padding-bottom: 10px; 
+    }
+
+    /* Grid & Kartu Produk */
+    .product-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+        gap: 30px; 
+    }
+
+    .product-card { 
+        background-color: #fff; 
+        border-radius: 12px; 
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08); 
+        display: flex; 
+        flex-direction: column; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover { 
+        transform: translateY(-8px); 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
+    }
+
+    .product-card img { 
+        width: 100%; 
+        height: 200px; 
+        object-fit: cover; 
+        border-radius: 12px 12px 0 0;
+    }
+
+    .product-card h4 { 
+        margin: 15px 10px 5px 10px; 
+        color: #5a3a22; 
+        font-family: 'Playfair Display', serif; 
+        font-size: 1.3em; 
+        min-height: 44px; 
+    }
+
+    .product-card .description { 
+        font-size: 0.9em; 
+        color: #666; 
+        line-height: 1.5; 
+        padding: 0 15px; 
+        flex-grow: 1; 
+        min-height: 60px; 
+    }
+
+    .product-card .price { 
+        font-size: 1.3em; 
+        font-weight: bold; 
+        color: #333; 
+        margin: 15px 10px; 
+    }
+
+    /* Tombol Jumlah (+/-) */
+    .add-to-cart-form { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px; 
+        padding: 0 15px 20px 15px; 
+        margin-top: auto; 
+    }
+
+    .quantity-container { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+
+    .quantity-btn {
+        background-color: #8B4513;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: bold;
+        transition: background-color 0.2s ease;
+    }
+
+    .quantity-btn:hover {
+        background-color: #A0522D;
+    }
+
+    .quantity-container .quantity-btn:first-child { 
+        border-radius: 8px 0 0 8px; 
+    }
+
+    .quantity-container .quantity-btn:last-child { 
+        border-radius: 0 8px 8px 0; 
+    }
+
+    .quantity-input { 
+        width: 60px; 
+        height: 40px; 
+        text-align: center; 
+        border: 1px solid #ccc; 
+        border-left: none; 
+        border-right: none; 
+        font-size: 16px; 
+        font-weight: 600; 
+    }
+
+    .quantity-input::-webkit-outer-spin-button, 
+    .quantity-input::-webkit-inner-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+    }
+
+    .add-to-cart-form .btn-buy { 
+        border-radius: 8px; 
+        padding: 12px; 
+        font-size: 1em; 
+        background: #28a745; 
+        color: white; 
+        border: none; 
+        cursor: pointer; 
+        font-weight: 600; 
+        transition: background-color 0.3s ease;
+    }
+
+    .add-to-cart-form .btn-buy:hover {
+        background: #218838;
+    }
+
+    /* ================================== */
+    /* HALAMAN LOGIN/REGISTRASI           */
+    /* ================================== */
+    .login-container { 
+        width: 100%; 
+        max-width: 450px; 
+        background: white; 
+        border-radius: 15px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        overflow: hidden; 
+        margin: 20px auto;
+    }
+
+    .login-section { 
+        padding: 30px; 
+    }
+
+    .login-section h2 { 
+        color: #5a3a22; 
+        margin-bottom: 20px; 
+        font-size: 1.5em; 
+        text-align: center; 
+    }
+
+    .form-group { 
+        margin-bottom: 20px; 
+    }
+
+    .form-group label { 
+        display: block; 
+        margin-bottom: 8px; 
+        font-weight: 500; 
+    }
+
+    .form-group input { 
+        width: 100%; 
+        padding: 12px 15px; 
+        border: 1px solid #e0e0e0; 
+        border-radius: 8px; 
+        font-size: 14px; 
+    }
+
+    .btn { 
+        padding: 12px 20px; 
+        border: none; 
+        background: #8B4513; 
+        color: white; 
+        cursor: pointer; 
+        border-radius: 8px; 
+        text-align: center; 
+        text-decoration: none; 
+        display: block; 
+        width: 100%; 
+        font-weight: bold; 
+        font-size: 16px; 
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background: #A0522D;
+    }
+
+    .back-link { 
+        text-align: center; 
+        margin-top: 20px; 
+        padding-top: 20px; 
+        border-top: 1px solid #eee; 
+    }
+
+    .back-link a { 
+        color: #5a3a22; 
+        text-decoration: none; 
+        font-weight: 500; 
+    }
+
+    /* ================================== */
+    /* HALAMAN KERANJANG BELANJA          */
+    /* ================================== */
+    .cart-page-container { 
+        max-width: 900px; 
+        margin: 40px auto; 
+        padding: 20px; 
+    }
+
+    .cart-page-container h1 { 
+        text-align: center; 
+        color: #5a3a22; 
+        margin-bottom: 30px; 
+    }
+
+    .cart-table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        background: #fff; 
+        border-radius: 12px; 
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08); 
+        overflow: hidden; 
+    }
+
+    .cart-table th { 
+        background-color: #f8f9fa; 
+        padding: 18px 20px; 
+        text-align: left; 
+        text-transform: uppercase; 
+        color: #666; 
+    }
+
+    .cart-table td { 
+        padding: 20px; 
+        border-bottom: 1px solid #f0f0f0; 
+        vertical-align: middle; 
+    }
+
+    .product-info { 
+        display: flex; 
+        align-items: center; 
+        gap: 20px; 
+    }
+
+    .product-info img { 
+        width: 70px; 
+        height: 70px; 
+        object-fit: cover; 
+        border-radius: 8px; 
+    }
+
+    .product-info .product-name { 
+        font-weight: 600; 
+    }
+
+    .checkout-container { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        margin-top: 30px; 
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .checkout-container .btn {
+        width: auto;
+        padding: 12px 25px;
+        font-size: 15px;
+    }
+
+    .btn-secondary { 
+        background-color: #6c757d; 
+        color: white; 
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    /* ================================== */
+    /* RESPONSIVE DESIGN - MOBILE         */
+    /* ================================== */
+    @media (max-width: 768px) {
+        /* Header Mobile */
+        header {
+            padding: 10px 15px;
+            flex-wrap: wrap;
+        }
+
+        .logo a {
+            font-size: 1.3em;
+        }
+
+        .logo img {
+            height: 30px;
+        }
+
+        .mobile-menu-toggle {
+            display: block;
+        }
+
+        nav {
+            width: 100%;
+            order: 3;
+        }
+
+        nav ul {
+            flex-direction: column;
+            width: 100%;
+            background: #8B4513;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        nav ul.show {
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0;
+            width: 100%;
+            border-bottom: 1px solid #A0522D;
+        }
+
+        nav ul li > a {
+            padding: 15px 20px;
+            border-bottom: none;
+        }
+
+        nav ul li.dropdown-li .dropdown-menu {
+            position: static;
+            display: block;
+            width: 100%;
+            box-shadow: none;
+            background: #A0522D;
+            border-radius: 0;
+            padding: 0;
+        }
+
+        nav ul li.dropdown-li .dropdown-menu li a {
+            padding: 10px 40px;
+            color: white;
+        }
+
+        nav ul li.dropdown-li .dropdown-menu li a:hover {
+            background: #8B4513;
+        }
+
+        /* Loyalty Bar Mobile */
+        .loyalty-bar {
+            padding: 10px 15px;
+        }
+
+        .loyalty-bar-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .loyalty-display {
+            justify-content: center;
+        }
+
+        .welcome-text {
+            font-size: 14px;
+        }
+
+        .loyalty-text {
+            font-size: 12px;
+        }
+
+        /* Main Content Mobile */
+        main {
+            padding: 20px 15px;
+        }
+
+        .home-container, .menu-page-container {
+            padding: 0 10px;
+        }
+
+        .hero-section {
+            height: 40vh;
+            min-height: 250px;
+            border-radius: 10px;
+        }
+
+        .hero-text h1 {
+            font-size: 2em;
+        }
+
+        .hero-text p {
+            font-size: 1.2em;
+        }
+
+        .featured-products h2, .menu-section h2, .menu-page-container h1 {
+            font-size: 2em;
+        }
+
+        /* Product Grid Mobile */
+        .product-grid {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card img {
+            height: 180px;
+        }
+
+        /* Cart Table Mobile */
+        .cart-table {
+            font-size: 14px;
+        }
+
+        .cart-table th,
+        .cart-table td {
+            padding: 10px 8px;
+        }
+
+        .product-info {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+        }
+
+        .product-info img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .checkout-container {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .checkout-container .btn {
+            width: 100%;
+        }
+
+        /* Form Mobile */
+        .login-container {
+            margin: 20px 15px;
+        }
+
+        .login-section {
+            padding: 20px;
+        }
+
+        /* Quantity Controls Mobile */
+        .quantity-container {
+            flex-wrap: wrap;
+        }
+
+        .quantity-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+        }
+
+        .quantity-input {
+            width: 50px;
+            height: 35px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        /* Extra Small Mobile */
+        .logo a {
+            font-size: 1.1em;
+        }
+
+        .hero-text h1 {
+            font-size: 1.5em;
+        }
+
+        .hero-text p {
+            font-size: 1em;
+        }
+
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .featured-products h2, .menu-section h2, .menu-page-container h1 {
+            font-size: 1.5em;
+        }
+
+        .loyalty-display {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .coffee-beans .bean {
+            font-size: 1.1em;
+        }
+
+        /* Hide some table columns on very small screens */
+        .cart-table .hide-mobile {
+            display: none;
+        }
+    }
+</style>
+
+<script>
+// Mobile menu toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const navMenu = document.querySelector('nav ul');
+    
+    if (mobileMenuToggle && navMenu) {
+        mobileMenuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+        });
+    }
+});
+</script>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="<?php echo BASE_URL; ?>/index.php">
+                <img src="<?php echo BASE_URL; ?>/images/logo.png" alt="Classic Coffee 789 Logo">
+                <span>Classic Coffee 789</span>
+            </a>
+        </div>
+        
+        <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <nav>
+            <ul>
+                <li><a href="<?php echo BASE_URL; ?>/index.php">Beranda</a></li>
+                <li class="dropdown-li">
+                    <a href="#">Produk <i class="fas fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?php echo BASE_URL; ?>/pilihan_paket.php">Paket</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/makanan.php">Makanan</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/pilihan_minuman.php">Minuman</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/voucher_saya.php">Voucher Saya</a></li>
+                    </ul>
+                </li>
+                <li><a href="<?php echo BASE_URL; ?>/keranjang.php">Keranjang (<?php echo count($_SESSION['cart'] ?? []); ?>)</a></li>
+                <li><a href="<?php echo BASE_URL; ?>/about.php">About</a></li>
+                <li><a href="<?php echo BASE_URL; ?>/service.php">Service</a></li>
+
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <li class="nav-logout-item">
+                        <a href="<?php echo BASE_URL; ?>/logout.php" class="nav-logout-btn">Logout</a>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-login-item">
+                        <a href="<?php echo BASE_URL; ?>/login.php" class="nav-login-btn">Login</a>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    </header>
+
+   <?php if (isset($_SESSION['user_id'])): 
+        $user_id = $_SESSION['user_id'];
+        $username = $_SESSION['username'];
+        // PERBAIKAN: Gunakan SUM(oi.quantity) untuk menghitung total quantity minuman yang dibeli
+        $sql_drinks = "SELECT SUM(oi.quantity) as total_drinks FROM order_items oi JOIN orders o ON oi.order_id = o.id JOIN products p ON oi.product_id = p.id WHERE o.user_id = ? AND p.category = 'minuman'";
+        $stmt = $conn->prepare($sql_drinks);
+        
+        if ($stmt) {
+            $stmt->bind_param("i", $user_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $data = $result->fetch_assoc();
+            $total_drinks = $data['total_drinks'] ?? 0;
+            $drinks_to_go = 10 - ($total_drinks % 10);
+            // Jika sudah kelipatan 10, maka drinks_to_go = 10 (untuk voucher berikutnya)
+            if ($drinks_to_go == 10 && $total_drinks > 0) {
+                $drinks_to_go = 10;
+            }
+        } else {
+            $total_drinks = 0;
+            $drinks_to_go = 10;
+        }
+    ?>
+        <div class="loyalty-bar">
+            <div class="loyalty-bar-content">
+                <span class="welcome-text">Selamat Datang, <strong><?php echo htmlspecialchars(ucfirst($username)); ?>!</strong></span>
+                <div class="loyalty-display">
+                    <span>Program Loyalitas: </span>
+                    <div class="coffee-beans">
+                        <?php
+                            $used_beans = $total_drinks % 10;
+                            for ($i = 0; $i < 10; $i++) { 
+                                echo '<span class="bean ' . ($i < $used_beans ? 'used' : '') . '">☕</span>'; 
+                            }
+                        ?>
+                    </div>
+                    <span class="loyalty-text">
+                        <?php if ($drinks_to_go == 10 && $total_drinks > 0): ?>
+                            (Beli <?php echo $drinks_to_go; ?> minuman lagi untuk 1 gratis)
+                        <?php else: ?>
+                            (Beli <?php echo $drinks_to_go; ?> minuman lagi untuk 1 gratis)
+                        <?php endif; ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Konten utama website akan ditambahkan di sini -->
+    
+</body>
+</html>
