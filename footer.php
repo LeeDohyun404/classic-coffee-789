@@ -160,8 +160,8 @@ footer {
                 Menyajikan kehangatan dalam setiap cangkir. Kunjungi kami untuk pengalaman kopi yang tak terlupakan.
             </p>
             <div class="contact">
-                <span><i class="fas fa-map-marker-alt"></i> &nbsp; Jl. Kopi Nikmat No. 123, Jakarta</span>
-                <span><i class="fas fa-phone"></i> &nbsp; +62 812-3456-7890</span>
+                <span><i class="fas fa-map-marker-alt"></i> &nbsp; Desa Kebanaran, Tamanwinangun RT 03/ RW 08 No.59</span>
+                <span><i class="fas fa-phone"></i> &nbsp; +62 896-6950-5208</span>
             </div>
             <div class="socials">
                 <a href="#" title="Instagram" aria-label="Instagram">
@@ -177,7 +177,7 @@ footer {
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; <?php echo date('Y'); ?> classiccoffee789.com | Designed with ☕
+        &copy; <?php echo date('Y'); ?> classiccoffee789.com | Designed by Firman Gandhi ☕
     </div>
 </footer>
 
