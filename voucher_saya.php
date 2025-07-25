@@ -7,10 +7,12 @@ if (!isset($_SESSION['user_id'])) {
 }
 include 'header.php'; 
 
-// Ambil semua voucher yang tersedia untuk user ini
 $user_id = $_SESSION['user_id'];
 $vouchers = [];
-$sql = "SELECT id, voucher_code, status, expires_at FROM vouchers WHERE user_id = ? AND status = 'tersedia' AND expires_at >= CURDATE() ORDER BY created_at DESC";
+
+// PERBAIKAN KUNCI: Tambahkan "AND is_used = 0"
+$sql = "SELECT id, voucher_code, status, expires_at FROM vouchers WHERE user_id = ? AND is_used = 0 AND expires_at >= CURDATE() ORDER BY created_at DESC";
+
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -26,7 +28,6 @@ while($row = $result->fetch_assoc()){
     .voucher-info p { margin: 0; font-size: 14px; color: #666; }
     .btn-use-voucher { background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
 </style>
-
 <div class="menu-page-container">
     <h1><i class="fas fa-ticket-alt"></i> Voucher Saya</h1>
     
@@ -48,7 +49,4 @@ while($row = $result->fetch_assoc()){
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
-
 <?php include 'footer.php'; ?>
-</body>
-</html>

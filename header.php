@@ -10,6 +10,9 @@ require_once 'config.php';
     <title>Classic Coffee 789</title>
     <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .profile-avatar{width:32px;height:32px;border-radius:50%;margin-right:8px;display:inline-flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;color:white;background:linear-gradient(135deg,#8B4513,#D2691E);border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.1);vertical-align:middle}.profile-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}.user-dropdown{display:flex;align-items:center;padding:8px 12px;border-radius:20px;background:rgba(255,255,255,0.1);transition:all .3s ease}.user-dropdown:hover{background:rgba(255,255,255,0.2)}.username-text{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:5px}@media (max-width:768px){.username-text{max-width:80px}.profile-avatar{width:28px;height:28px;font-size:12px}}
+    </style>
 </head>
 <body>
 <style>
@@ -234,21 +237,22 @@ require_once 'config.php';
     }
 
     .hero-section {
-        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('<?php echo BASE_URL; ?>/images/background.jpg') center/cover;
-    /* CSS lainnya */
-        height: 50vh; 
-        background-position: center; 
-        background-size: cover; 
-        border-radius: 15px;
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-        text-align: center; 
-        color: white;
-        min-height: 300px;
-        position: relative;
-        z-index: 1;
-    }
+    /* Path ini relatif terhadap file CSS itu sendiri */
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/background.jpg');
+    
+    height: 50vh; 
+    background-position: center; 
+    background-size: cover; 
+    border-radius: 15px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    color: white;
+    min-height: 300px;
+    position: relative;
+    z-index: 1;
+}
 
     .hero-text h1 { 
         color: white; 
@@ -783,9 +787,131 @@ require_once 'config.php';
         }
     }
 </style>
+<header>
+    <div class="logo">
+        <a href="<?php echo BASE_URL; ?>/index.php">
+            <img src="<?php echo BASE_URL; ?>/images/logo.png" alt="Classic Coffee 789 Logo">
+            <span>Classic Coffee 789</span>
+        </a>
+    </div>
+    
+    <button class="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <nav>
+        <ul>
+            <li><a href="<?php echo BASE_URL; ?>/index.php">Beranda</a></li>
+            <li class="dropdown-li">
+                <a href="#">Produk <i class="fas fa-caret-down"></i></a>
+                <ul class="dropdown-menu">
+                    <li><a href="<?php echo BASE_URL; ?>/pilihan_paket.php">Paket</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>/makanan.php">Makanan</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>/pilihan_minuman.php">Minuman</a></li>
+                </ul>
+            </li>
+            <li><a href="<?php echo BASE_URL; ?>/keranjang.php">Keranjang (<?php echo count($_SESSION['cart'] ?? []); ?>)</a></li>
+            <li><a href="<?php echo BASE_URL; ?>/about.php">About</a></li>
+            <li><a href="<?php echo BASE_URL; ?>/service.php">Service</a></li>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <?php
+                    $user_id_for_pic = $_SESSION['user_id'];
+                    $stmt_pic = $conn->prepare("SELECT profile_picture FROM users WHERE id = ?");
+                    $stmt_pic->bind_param("i", $user_id_for_pic);
+                    $stmt_pic->execute();
+                    $result_pic = $stmt_pic->get_result();
+                    $user_data = $result_pic->fetch_assoc();
+                    $profile_pic_path = $user_data['profile_picture'] ?? '';
+                    $has_profile_pic = !empty($profile_pic_path) && $profile_pic_path !== 'default.png' && file_exists('uploads/profiles/' . $profile_pic_path);
+                    $username = $_SESSION['username'];
+                    $initials = '';
+                    $words = explode(' ', trim($username));
+                    if (count($words) >= 2) {
+                        $initials = strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+                    } else {
+                        $initials = strtoupper(substr($words[0], 0, 2));
+                    }
+                ?>
+                <li class="dropdown-li">
+                    <a href="#" class="user-dropdown">
+                        <div class="profile-avatar">
+                            <?php if ($has_profile_pic): ?>
+                                <img src="<?php echo BASE_URL; ?>/uploads/profiles/<?php echo $profile_pic_path; ?>" alt="profil">
+                            <?php else: ?>
+                                <?php echo $initials; ?>
+                            <?php endif; ?>
+                        </div>
+                        <span class="username-text"><?php echo htmlspecialchars($username); ?></span>
+                        <i class="fas fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?php echo BASE_URL; ?>/profil.php">Profil Saya</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/voucher_saya.php">Voucher Saya</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>/logout.php">Logout</a></li>
+                    </ul>
+                </li>
+            <?php else: ?>
+                <li class="nav-login-item">
+                    <a href="<?php echo BASE_URL; ?>/login.php" class="nav-login-btn">Login</a>
+                </li>
+            <?php endif; ?>
+        </ul>
+    </nav>
+</header>
+<?php if (isset($_SESSION['user_id'])): 
+    $user_id = $_SESSION['user_id'];
+    $username = $_SESSION['username'];
+    
+    // ==========================================================
+    // PERBAIKAN UTAMA LOGIKA VOUCHER ADA DI DALAM QUERY SQL DI BAWAH INI
+    // ==========================================================
+   $sql_drinks = "SELECT SUM(oi.quantity) as total_drinks 
+               FROM order_items oi 
+               JOIN orders o ON oi.order_id = o.id 
+               JOIN products p ON oi.product_id = p.id 
+               WHERE o.user_id = ? AND o.status = 'paid' AND o.payment_method != 'Voucher' AND p.category LIKE 'minuman%'";
+    // Penjelasan:
+    // 1. o.status = 'paid' -> Hanya menghitung minuman dari pesanan yang sudah lunas.
+    // 2. p.category LIKE 'minuman%' -> Mencari kategori 'minuman-kopi' dan 'minuman-nonkopi'.
+    
+    $stmt = $conn->prepare($sql_drinks);
+    
+    if ($stmt) {
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        $total_drinks = $data['total_drinks'] ?? 0;
+        $drinks_to_go = 10 - ($total_drinks % 10);
+        if ($drinks_to_go == 10 && $total_drinks > 0) {
+            $drinks_to_go = 10;
+        }
+    } else {
+        $total_drinks = 0;
+        $drinks_to_go = 10;
+    }
+?>
+    <div class="loyalty-bar">
+        <div class="loyalty-bar-content">
+            <span class="welcome-text">Selamat Datang, <strong><?php echo htmlspecialchars(ucfirst($username)); ?>!</strong></span>
+            <div class="loyalty-display">
+                <span>Program Loyalitas: </span>
+                <div class="coffee-beans">
+                    <?php
+                        $used_beans = $total_drinks % 10;
+                        for ($i = 0; $i < 10; $i++) { 
+                            echo '<span class="bean ' . ($i < $used_beans ? 'used' : '') . '">☕</span>'; 
+                        }
+                    ?>
+                </div>
+                <span class="loyalty-text">(Beli <?php echo $drinks_to_go; ?> minuman lagi untuk 1 gratis)</span>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <script>
-// Mobile menu toggle
+// Script tidak diubah
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('nav ul');
@@ -797,98 +923,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
-<body>
-    <header>
-        <div class="logo">
-            <a href="<?php echo BASE_URL; ?>/index.php">
-                <img src="<?php echo BASE_URL; ?>/images/logo.png" alt="Classic Coffee 789 Logo">
-                <span>Classic Coffee 789</span>
-            </a>
-        </div>
-        
-        <button class="mobile-menu-toggle">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <nav>
-            <ul>
-                <li><a href="<?php echo BASE_URL; ?>/index.php">Beranda</a></li>
-                <li class="dropdown-li">
-                    <a href="#">Produk <i class="fas fa-caret-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="<?php echo BASE_URL; ?>/pilihan_paket.php">Paket</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>/makanan.php">Makanan</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>/pilihan_minuman.php">Minuman</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>/voucher_saya.php">Voucher Saya</a></li>
-                    </ul>
-                </li>
-                <li><a href="<?php echo BASE_URL; ?>/keranjang.php">Keranjang (<?php echo count($_SESSION['cart'] ?? []); ?>)</a></li>
-                <li><a href="<?php echo BASE_URL; ?>/about.php">About</a></li>
-                <li><a href="<?php echo BASE_URL; ?>/service.php">Service</a></li>
-
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <li class="nav-logout-item">
-                        <a href="<?php echo BASE_URL; ?>/logout.php" class="nav-logout-btn">Logout</a>
-                    </li>
-                <?php else: ?>
-                    <li class="nav-login-item">
-                        <a href="<?php echo BASE_URL; ?>/login.php" class="nav-login-btn">Login</a>
-                    </li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-    </header>
-
-   <?php if (isset($_SESSION['user_id'])): 
-        $user_id = $_SESSION['user_id'];
-        $username = $_SESSION['username'];
-        // PERBAIKAN: Gunakan SUM(oi.quantity) untuk menghitung total quantity minuman yang dibeli
-        $sql_drinks = "SELECT SUM(oi.quantity) as total_drinks FROM order_items oi JOIN orders o ON oi.order_id = o.id JOIN products p ON oi.product_id = p.id WHERE o.user_id = ? AND p.category = 'minuman'";
-        $stmt = $conn->prepare($sql_drinks);
-        
-        if ($stmt) {
-            $stmt->bind_param("i", $user_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $data = $result->fetch_assoc();
-            $total_drinks = $data['total_drinks'] ?? 0;
-            $drinks_to_go = 10 - ($total_drinks % 10);
-            // Jika sudah kelipatan 10, maka drinks_to_go = 10 (untuk voucher berikutnya)
-            if ($drinks_to_go == 10 && $total_drinks > 0) {
-                $drinks_to_go = 10;
-            }
-        } else {
-            $total_drinks = 0;
-            $drinks_to_go = 10;
-        }
-    ?>
-        <div class="loyalty-bar">
-            <div class="loyalty-bar-content">
-                <span class="welcome-text">Selamat Datang, <strong><?php echo htmlspecialchars(ucfirst($username)); ?>!</strong></span>
-                <div class="loyalty-display">
-                    <span>Program Loyalitas: </span>
-                    <div class="coffee-beans">
-                        <?php
-                            $used_beans = $total_drinks % 10;
-                            for ($i = 0; $i < 10; $i++) { 
-                                echo '<span class="bean ' . ($i < $used_beans ? 'used' : '') . '">☕</span>'; 
-                            }
-                        ?>
-                    </div>
-                    <span class="loyalty-text">
-                        <?php if ($drinks_to_go == 10 && $total_drinks > 0): ?>
-                            (Beli <?php echo $drinks_to_go; ?> minuman lagi untuk 1 gratis)
-                        <?php else: ?>
-                            (Beli <?php echo $drinks_to_go; ?> minuman lagi untuk 1 gratis)
-                        <?php endif; ?>
-                    </span>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
-
-    <!-- Konten utama website akan ditambahkan di sini -->
-    
 </body>
 </html>

@@ -18,33 +18,13 @@ $is_logged_in = isset($_SESSION['user_id']);
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 50px; background: #fff; border-bottom: 1px solid #ddd; }
         .logo a { display: flex; align-items: center; gap: 12px; text-decoration: none; color: #5a3a22; font-family: 'Playfair Display', serif; font-size: 1.8em; font-weight: bold; }
         .logo img { height: 40px; }
-        nav ul { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; }
-        nav ul li { margin-left: 35px; }
-        nav ul li > a { text-decoration: none; color: #333; font-weight: 500; }
-        main { padding: 40px 20px; }
+        main { padding: 40px; }
         .form-container { max-width: 600px; margin: auto; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .form-container h1 { text-align: center; color: #5a3a22; font-family: 'Playfair Display', serif; margin-top: 0; margin-bottom: 30px; }
+        .form-container h1 { text-align: center; color: #5a3a22; font-family: 'Playfair Display', serif; margin-bottom: 30px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s ease;
-        }
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #a0522d;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 8px; background-color: #8B4513; color: white; font-size: 16px; cursor: pointer; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 8px; background-color: #8B4513; color: white; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -52,12 +32,6 @@ $is_logged_in = isset($_SESSION['user_id']);
          <div class="logo">
             <a href="index.php"><img src="images/logo.png" alt="Logo"><span>Classic Coffee 789</span></a>
         </div>
-        <nav>
-            <ul>
-                <li><a href="index.php">Beranda</a></li>
-                <li><a href="keranjang.php">Keranjang</a></li>
-            </ul>
-        </nav>
     </header>
 
     <main>

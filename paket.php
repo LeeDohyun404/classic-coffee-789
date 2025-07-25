@@ -1,91 +1,46 @@
 <?php 
 include 'header.php'; 
-$kategori = $_GET['kategori'] ?? 'kopi'; 
+$kategori = $_GET['kategori'] ?? 'kopi'; // default ke 'kopi'
+
+// Tentukan kategori database dan judul halaman
+$db_category = ($kategori == 'kopi') ? 'paket-kopi' : 'paket-teh';
+$page_title = ($kategori == 'kopi') ? 'Paket Kopi' : 'Paket Thai Tea';
 ?>
-<title>Menu Paket - Classic Coffee 789</title>
-<style>
-    /* CSS KHUSUS UNTUK MENGHILANGKAN PANAH INPUT JUMLAH */
-    .quantity-input::-webkit-outer-spin-button,
-    .quantity-input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    .quantity-input[type=number] {
-      -moz-appearance: textfield;
-    }
-</style>
+<title>Menu <?php echo $page_title; ?> - Classic Coffee 789</title>
 
 <div class="menu-page-container">
-
-    <?php if ($kategori == 'kopi'): ?>
-        <div class="menu-section">
-            <h1>Paket Kopi Original</h1>
-            <div class="product-grid">
-                <?php
-                $paket_kopi_desc = [
-                    'Paket Hemat Kopi' => 'Pilihan Kopi (Original/Ella/Carla/Gula Aren) + Burger Mini.',
-                    'Paket Kenyang Kopi' => 'Pilihan Kopi (Original/Ella/Carla/Gula Aren) + Spaghetti.',
-                    'Paket Sharing Kopi' => 'Pilihan Kopi (Original/Ella/Carla/Gula Aren) + Dimsum.',
-                    'Paket Sultan Kopi' => 'Pilihan Kopi (Original/Ella/Carla/Gula Aren) + Pizza.',
-                    'Paket Santai Kopi' => 'Pilihan Kopi (Original/Ella/Carla/Gula Aren) + Risol Ayam Suwir.'
-                ];
-                $result = $conn->query("SELECT * FROM products WHERE name LIKE 'Paket%Kopi'");
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="product-card">';
-                    echo '  <img src="' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
-                    echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
-                    echo '  <p class="description">' . ($paket_kopi_desc[$row['name']] ?? '') . '</p>';
-                    echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
-                    echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
-                    echo '      <div class="quantity-container">';
-                    echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';
-                    echo '          <input type="number" name="quantity" value="1" min="1" class="quantity-input">';
-                    echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>';
-                    echo '      </div>';
-                    echo '      <input type="hidden" name="product_id" value="' . $row['id'] . '">';
-                    echo '      <button type="submit" class="btn-buy">Tambah ke Keranjang</button>';
-                    echo '  </form>';
-                    echo '</div>';
-                }
-                ?>
-            </div>
-        </div>
-    <?php elseif ($kategori == 'teh'): ?>
-        <div class="menu-section">
-            <h1>Paket Thai Tea</h1>
-            <div class="product-grid">
-                <?php
-                $paket_teh_desc = [
-                    'Paket Sultan Thai Tea' => 'Pilihan Thai Tea (Original/Milk/Lemon/Lychee) + Pizza.',
-                    'Paket Sharing Thai Tea' => 'Pilihan Thai Tea (Original/Milk/Lemon/Lychee) + Dimsum.',
-                    'Paket Kenyang Thai Tea' => 'Pilihan Thai Tea (Original/Milk/Lemon/Lychee) + Spaghetti.',
-                    'Paket Santai Thai Tea' => 'Pilihan Thai Tea (Original/Milk/Lemon/Lychee) + Risol Ayam Suwir.',
-                    'Paket Hemat Thai Tea' => 'Pilihan Thai Tea (Original/Milk/Lemon/Lychee) + Burger Mini.'
-                ];
-                $result = $conn->query("SELECT * FROM products WHERE name LIKE 'Paket%Thai Tea'");
-                while($row = $result->fetch_assoc()) {
-                    echo '<div class="product-card">';
-                    echo '  <img src="' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
-                    echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
-                    echo '  <p class="description">' . ($paket_teh_desc[$row['name']] ?? '') . '</p>';
-                    echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
-                    echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
-                    echo '      <div class="quantity-container">';
-                    echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';
-                    echo '          <input type="number" name="quantity" value="1" min="1" class="quantity-input">';
-                    echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>';
-                    echo '      </div>';
-                    echo '      <input type="hidden" name="product_id" value="' . $row['id'] . '">';
-                    echo '      <button type="submit" class="btn-buy">Tambah ke Keranjang</button>';
-                    echo '  </form>';
-                    echo '</div>';
-                }
-                ?>
-            </div>
-        </div>
-    <?php endif; ?>
+    <h1><?php echo $page_title; ?></h1>
+    <div class="product-grid">
+        <?php
+        $stmt = $conn->prepare("SELECT * FROM products WHERE category = ? ORDER BY name ASC");
+        $stmt->bind_param("s", $db_category);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result && $result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo '<div class="product-card">';
+                echo '  <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
+                echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
+                echo '      <div class="quantity-container">';
+                echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';
+                echo '          <input type="number" name="quantity" value="1" min="1" class="quantity-input" readonly>';
+                echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, 1)">+</button>';
+                echo '      </div>';
+                echo '      <input type="hidden" name="product_id" value="' . $row['id'] . '">';
+                echo '      <button type="submit" class="btn-buy">Tambah ke Keranjang</button>';
+                echo '  </form>';
+                echo '</div>';
+            }
+        } else {
+            echo '<p style="text-align: center; width: 100%;">Menu paket ini belum tersedia.</p>';
+        }
+        ?>
+    </div>
 </div>
 
-<?php include 'footer.php'; ?>
-</body>
-</html>
+<?php 
+include 'footer.php'; 
+?>

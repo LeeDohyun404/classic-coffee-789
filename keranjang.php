@@ -1,12 +1,50 @@
 <?php 
 require_once 'config.php';
+
+// ==================================================================
+// BAGIAN BARU: SINKRONISASI DAN PEMBERSIHAN KERANJANG
+// ==================================================================
+$cart = $_SESSION['cart'] ?? [];
+if (!empty($cart)) {
+    // 1. Ambil semua ID produk dari sesi
+    $product_ids_in_session = array_keys($cart);
+    $ids_string_for_check = implode(',', array_map('intval', $product_ids_in_session));
+
+    // 2. Tanyakan ke database, ID mana saja yang masih valid
+    $sql_check = "SELECT id FROM products WHERE id IN ($ids_string_for_check)";
+    $result_check = $conn->query($sql_check);
+    
+    $valid_product_ids = [];
+    if ($result_check) {
+        while ($row = $result_check->fetch_assoc()) {
+            $valid_product_ids[] = $row['id'];
+        }
+    }
+
+    // 3. Bandingkan ID di sesi dengan ID yang valid dari database
+    $invalid_ids = array_diff($product_ids_in_session, $valid_product_ids);
+
+    // 4. Jika ada ID yang tidak valid (produk telah dihapus), hapus dari sesi
+    if (!empty($invalid_ids)) {
+        foreach ($invalid_ids as $id) {
+            unset($_SESSION['cart'][$id]);
+        }
+        // Perbarui variabel $cart lokal setelah pembersihan
+        $cart = $_SESSION['cart'];
+    }
+}
+// ==================================================================
+// AKHIR DARI BAGIAN BARU
+// ==================================================================
+
+
+// Kode selanjutnya berjalan seperti biasa, tetapi sekarang dengan data sesi yang sudah bersih
 include 'header.php'; 
 
-$cart = $_SESSION['cart'] ?? [];
 $cart_items = [];
 $total_price = 0;
 $discount = 0;
-$highest_drink_price = 0; // <-- PERBAIKAN: Variabel diinisialisasi di sini
+$highest_drink_price = 0;
 
 if (!empty($cart)) {
     $product_ids = array_keys($cart);
@@ -15,15 +53,20 @@ if (!empty($cart)) {
         $sql = "SELECT id, name, price, image_url, category FROM products WHERE id IN ($ids_string)";
         $result = $conn->query($sql);
         $products_data = [];
-        if ($result) { while ($row = $result->fetch_assoc()) { $products_data[$row['id']] = $row; } }
+        if ($result) { 
+            while ($row = $result->fetch_assoc()) { 
+                $products_data[$row['id']] = $row;
+            } 
+        }
         
         foreach ($cart as $id => $quantity) {
             if (isset($products_data[$id])) {
                 $product = $products_data[$id];
                 $total_price += $product['price'] * $quantity;
-                // Cari harga minuman termahal untuk diskon
-                if ($product['category'] == 'minuman' && $product['price'] > $highest_drink_price) {
-                    $highest_drink_price = $product['price'];
+                if ($product['category'] == 'minuman-kopi' || $product['category'] == 'minuman-nonkopi') {
+                    if ($product['price'] > $highest_drink_price) {
+                        $highest_drink_price = $product['price'];
+                    }
                 }
                 $cart_items[] = [ 
                     'id' => $id, 'name' => $product['name'], 'price' => $product['price'], 
@@ -61,7 +104,6 @@ if ($voucher_code && $highest_drink_price > 0) {
     .quantity-in-cart { display: flex; align-items: center; justify-content: center; gap: 15px; }
     .quantity-in-cart a { text-decoration: none; font-weight: bold; color: #5a3a22; padding: 5px 12px; border: 1px solid #ddd; border-radius: 5px; }
 </style>
-
 <main class="cart-page-container">
     <h1>🛒 Keranjang Belanja Anda</h1>
     
@@ -70,7 +112,6 @@ if ($voucher_code && $highest_drink_price > 0) {
             <a href="voucher_saya.php" class="btn" style="width:auto; background-color:#f39c12;">Lihat Voucher Saya</a>
         </div>
     <?php endif; ?>
-
     <?php if (empty($cart_items)): ?>
         <p style="text-align:center; padding: 40px; background: #fff; border-radius: 8px;">Keranjang Anda masih kosong.</p>
     <?php else: ?>
@@ -83,7 +124,7 @@ if ($voucher_code && $highest_drink_price > 0) {
                     <tr>
                         <td>
                             <div class="product-info">
-                                <img src="<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
+                                <img src="images/<?php echo htmlspecialchars($item['image_url']); ?>" alt="<?php echo htmlspecialchars($item['name']); ?>">
                                 <div><div class="product-name"><?php echo htmlspecialchars($item['name']); ?></div></div>
                             </div>
                         </td>
@@ -121,7 +162,4 @@ if ($voucher_code && $highest_drink_price > 0) {
         </div>
     <?php endif; ?>
 </main>
-
 <?php include 'footer.php'; ?>
-</body>
-</html>
