@@ -152,11 +152,12 @@ $result_orders_list = $conn->query($sql_orders_list);
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-coffee"></i> Dashboard Admin</h1>
-            <div class="header-nav">
-                <a href="kelola_produk.php">Kelola Produk</a>
-                <a href="kelola_pelanggan.php">Kelola Pelanggan</a>
-                <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
-            </div>
+           <div class="header-nav">
+              <a href="kelola_produk.php">Kelola Produk</a>
+              <a href="kelola_pelanggan.php">Kelola Pelanggan</a>
+              <a href="kelola_slider.php">Kelola Slider</a> 
+              <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
         </div>
         
         <div class="stats-grid">

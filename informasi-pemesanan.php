@@ -16,12 +16,14 @@ $order = $stmt_order->get_result()->fetch_assoc();
 
 if (!$order) { die("Pesanan tidak ditemukan."); }
 
+// Mengambil item-item pesanan
 $sql_items = "SELECT oi.quantity, p.name AS product_name, oi.price_per_item FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?";
 $stmt_items = $conn->prepare($sql_items);
 $stmt_items->bind_param("i", $order_id);
 $stmt_items->execute();
 $items = $stmt_items->get_result();
 
+// Hitung subtotal asli sebelum diskon
 $subtotal_price = $order['total_price'] + $order['voucher_discount'];
 ?>
 <!DOCTYPE html>
@@ -39,8 +41,9 @@ $subtotal_price = $order['total_price'] + $order['voucher_discount'];
 
     <main style="padding: 40px; text-align: center;">
         <div style="border: 1px solid #ddd; padding: 30px; max-width: 600px; margin: auto; background: #fafafa; border-radius: 10px;">
+            
             <h2>🛒 Pesanan Telah Diterima!</h2>
-            <p>Terima kasih, <?php echo htmlspecialchars($order['customer_name']); ?>. Langkah terakhir adalah mengirim pesanan ini ke penjual via WhatsApp.</p>
+            <p>Terima kasih, <?php echo htmlspecialchars($order['customer_name']); ?>. Berikut adalah rincian pesanan Anda.</p>
 
             <?php if (!empty($order['whatsapp_url'])): ?>
                 <a href="<?php echo htmlspecialchars($order['whatsapp_url']); ?>" target="_blank" class="btn" style="display:inline-block; margin-top: 20px; margin-bottom: 20px; width: auto; padding: 15px 30px; background: #25D366; text-decoration:none; color:white; border-radius:8px; font-size: 1.2em;">

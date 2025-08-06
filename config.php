@@ -11,7 +11,7 @@ define('BASE_URL', 'http://localhost/classic_coffe_789');
 $db_host = 'localhost';
 $db_user = 'root';
 $db_pass = '';
-$db_name = 'db_classic_coffee';
+$db_name = 'if0_39411554_kopi';
 
 // Buat koneksi
 $conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
