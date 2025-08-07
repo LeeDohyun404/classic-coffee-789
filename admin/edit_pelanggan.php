@@ -12,6 +12,17 @@ if (!$user_id) {
     exit();
 }
 
+// Ambil data user terlebih dahulu
+$stmt_user = $conn->prepare("SELECT id, username, profile_picture FROM users WHERE id = ?");
+$stmt_user->bind_param("i", $user_id);
+$stmt_user->execute();
+$user = $stmt_user->get_result()->fetch_assoc();
+
+if (!$user) {
+    header("Location: kelola_pelanggan.php");
+    exit();
+}
+
 // Proses update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
@@ -34,8 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
         $upload_dir = '../uploads/profiles/';
         
-        // Hapus foto lama jika ada
-        if (!empty($user['profile_picture']) && file_exists($upload_dir . $user['profile_picture'])) {
+        // Hapus foto lama jika ada dan bukan default
+        if (!empty($user['profile_picture']) && $user['profile_picture'] !== 'default.png' && file_exists($upload_dir . $user['profile_picture'])) {
             unlink($upload_dir . $user['profile_picture']);
         }
         
@@ -49,18 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header("Location: kelola_pelanggan.php");
-    exit();
-}
-
-// Ambil data user
-$stmt_user = $conn->prepare("SELECT id, username, profile_picture FROM users WHERE id = ?");
-$stmt_user->bind_param("i", $user_id);
-$stmt_user->execute();
-$user = $stmt_user->get_result()->fetch_assoc();
-
-if (!$user) {
-    header("Location: kelola_pelanggan.php");
+    header("Location: kelola_pelanggan.php?status=updated");
     exit();
 }
 ?>
@@ -69,7 +69,7 @@ if (!$user) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Pelanggan - Admin</title>
+    <title>Edit Pelanggan - Classic Coffee 789</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -80,7 +80,7 @@ if (!$user) {
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f4f7f6 0%, #e8f0ef 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -93,7 +93,7 @@ if (!$user) {
             max-width: 500px;
             width: 100%;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             overflow: hidden;
             animation: slideUp 0.6s ease-out;
         }
@@ -156,7 +156,7 @@ if (!$user) {
         .profile-preview {
             text-align: center;
             padding: 30px;
-            background: #f8f9fc;
+            background: linear-gradient(135deg, rgba(90, 58, 34, 0.05) 0%, rgba(139, 111, 71, 0.05) 100%);
             position: relative;
         }
 
@@ -171,14 +171,14 @@ if (!$user) {
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 4px solid #5a3a22;
+            box-shadow: 0 10px 25px rgba(90, 58, 34, 0.2);
             transition: all 0.3s ease;
         }
 
         .profile-img:hover {
             transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(90, 58, 34, 0.3);
         }
 
         .img-overlay {
@@ -187,7 +187,7 @@ if (!$user) {
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(90, 58, 34, 0.8);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -206,6 +206,12 @@ if (!$user) {
             font-size: 24px;
         }
 
+        .profile-preview h3 {
+            color: #5a3a22;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
         .form-content {
             padding: 30px;
         }
@@ -219,7 +225,7 @@ if (!$user) {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #333;
+            color: #5a3a22;
             transition: color 0.3s ease;
         }
 
@@ -271,25 +277,26 @@ if (!$user) {
             width: 100%;
         }
 
-        .file-input-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            border: none;
-            width: 100%;
+       .file-input-btn {
+    background: #f8f9fa; /* Warna latar belakang abu-abu muda */
+    color: #5a3a22; /* Warna teks coklat */
+    border: 2px dashed #d9d9d9; /* Garis putus-putus agar terlihat seperti area upload */
+    padding: 15px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    width: 100%;
         }
 
         .file-input-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    border-color: #5a3a22; /* Warna border berubah saat disentuh mouse */
+    background: #f1f3f5;
         }
+
 
         .file-input-btn input {
             position: absolute;
@@ -300,8 +307,9 @@ if (!$user) {
         .file-name {
             margin-top: 10px;
             font-size: 14px;
-            color: #666;
+            color: #5a3a22;
             text-align: center;
+            font-weight: 500;
         }
 
         .button-group {
@@ -338,12 +346,15 @@ if (!$user) {
         }
 
         .btn-secondary {
-            background: #e9ecef;
-            color: #495057;
+            background: white;
+            color: #5a3a22;
+            border: 2px solid #e1e5e9;
         }
 
         .btn-secondary:hover {
-            background: #dee2e6;
+            background: #f8f9fa;
+            border-color: #5a3a22;
+            color: #4a2f1d;
             transform: translateY(-2px);
         }
 
@@ -372,27 +383,6 @@ if (!$user) {
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
-        .success-message {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            text-align: center;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .strength-meter {
             height: 4px;
             background: #e9ecef;
@@ -419,8 +409,33 @@ if (!$user) {
             font-weight: 600;
         }
 
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 3;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-5px);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
                 margin: 10px;
                 border-radius: 15px;
@@ -450,12 +465,46 @@ if (!$user) {
             .button-group {
                 flex-direction: column;
             }
+
+            .back-link {
+                position: static;
+                display: inline-block;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            z-index: 1000;
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <a href="kelola_pelanggan.php" class="back-link">
+                <i class="fas fa-arrow-left"></i> Kembali
+            </a>
             <h1><i class="fas fa-user-edit"></i> Edit Pelanggan</h1>
             <div class="subtitle">Kelola informasi pelanggan</div>
         </div>
@@ -466,7 +515,7 @@ if (!$user) {
                      alt="Profile Picture" 
                      class="profile-img" 
                      id="profilePreview"
-                     onerror="this.src='../images/default-avatar.png'">
+                     onerror="handleImageError(this)">
                 <div class="img-overlay" onclick="document.getElementById('profile_picture').click()">
                     <i class="fas fa-camera"></i>
                 </div>
@@ -524,7 +573,7 @@ if (!$user) {
                     </button>
                     <a href="kelola_pelanggan.php" class="btn btn-secondary">
                         <i class="fas fa-times"></i>
-                        Batal
+                        <span>Batal</span>
                     </a>
                 </div>
             </form>
@@ -556,7 +605,6 @@ if (!$user) {
             }
 
             let strength = 0;
-            let strengthLabel = '';
 
             // Check password strength
             if (password.length >= 8) strength++;
@@ -600,6 +648,21 @@ if (!$user) {
         fileInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
                 const file = this.files[0];
+                
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Ukuran file terlalu besar! Maksimal 5MB.');
+                    this.value = '';
+                    return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('File harus berupa gambar!');
+                    this.value = '';
+                    return;
+                }
+
                 fileName.textContent = file.name;
                 fileButtonText.textContent = 'Foto Terpilih';
 
@@ -648,22 +711,6 @@ if (!$user) {
             submitBtn.querySelector('span').textContent = 'Memproses...';
         });
 
-        // Smooth scroll to top on load
-        window.addEventListener('load', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Add floating animation to profile image
-        let isFloating = true;
-        setInterval(() => {
-            if (isFloating) {
-                profilePreview.style.transform = 'translateY(-5px)';
-            } else {
-                profilePreview.style.transform = 'translateY(0px)';
-            }
-            isFloating = !isFloating;
-        }, 2000);
-
         // Username validation
         const usernameInput = document.getElementById('username');
         usernameInput.addEventListener('input', function() {
@@ -681,12 +728,7 @@ if (!$user) {
 
         // Konfirmasi sebelum meninggalkan halaman jika ada perubahan
         let formChanged = false;
-        const originalValues = {
-            username: usernameInput.value,
-            password: '',
-            file: ''
-        };
-
+        
         form.addEventListener('change', function() {
             formChanged = true;
         });
@@ -697,6 +739,54 @@ if (!$user) {
                 e.returnValue = 'Anda memiliki perubahan yang belum disimpan. Yakin ingin meninggalkan halaman?';
             }
         });
+
+        // Smooth animations
+        window.addEventListener('load', function() {
+            // Add stagger animation to form groups
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.5s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+
+        // Handle image error to prevent infinite refresh loop
+        function handleImageError(img) {
+            // Prevent infinite loop by checking if we already tried to load default
+            if (img.src.includes('data:image') || img.getAttribute('data-error-handled')) {
+                return;
+            }
+            
+            // Mark as handled to prevent infinite loop
+            img.setAttribute('data-error-handled', 'true');
+            
+            // Create a default avatar using canvas or use a data URL
+            const canvas = document.createElement('canvas');
+            canvas.width = 120;
+            canvas.height = 120;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw a simple default avatar
+            ctx.fillStyle = '#5a3a22';
+            ctx.fillRect(0, 0, 120, 120);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('👤', 60, 60);
+            
+            // Set the canvas as image source
+            img.src = canvas.toDataURL();
+        }
+
+        console.log('✅ Edit Pelanggan page loaded successfully!');
     </script>
 </body>
 </html>
