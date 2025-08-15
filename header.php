@@ -44,7 +44,7 @@ require_once 'config.php';
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 20px;
+        padding: 24px 36px;
         border-bottom: 1px solid #654321;
         box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         position: relative;
@@ -54,16 +54,18 @@ require_once 'config.php';
     .logo a {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 18px;
         text-decoration: none;
         color: white;
-        font-size: 1.5em;
+        font-size: 1.7em;
         font-weight: bold;
         font-family: 'Playfair Display', serif;
     }
 
     .logo img {
         height: 35px;
+        width: auto;
+        transition: height 0.2s;
     }
 
     /* Mobile Menu Toggle */
@@ -794,6 +796,125 @@ require_once 'config.php';
             <span>Classic Coffee 789</span>
         </a>
     </div>
+    <a href="https://maps.app.goo.gl/XycEFrMubEgNMFPt5" target="_blank" class="find-store-btn">
+        <i class="fas fa-map-marker-alt"></i> Find a store
+    <span class="header-coffee-anim">
+        <!-- Bee Animation -->
+        <svg class="bee-anim" width="24" height="24" viewBox="0 0 32 32" style="position:absolute;left:0;top:0;z-index:2;pointer-events:none;animation:beeFly 4.5s linear infinite;">
+            <!-- Bee body -->
+            <ellipse cx="16" cy="18" rx="7" ry="5" fill="#FFD700" stroke="#8B4513" stroke-width="1.5"/>
+            <!-- Bee stripes -->
+            <rect x="13" y="15" width="2" height="6" fill="#8B4513"/>
+            <rect x="17" y="15" width="2" height="6" fill="#8B4513"/>
+            <!-- Bee wings -->
+            <ellipse cx="13" cy="13" rx="3" ry="2" fill="#e0f7fa" stroke="#8B4513" stroke-width="0.7"/>
+            <ellipse cx="19" cy="13" rx="3" ry="2" fill="#e0f7fa" stroke="#8B4513" stroke-width="0.7"/>
+            <!-- Bee face -->
+            <circle cx="16" cy="18" r="1.2" fill="#fff"/>
+            <ellipse cx="14.5" cy="17.5" rx="0.5" ry="0.7" fill="#333"/>
+            <ellipse cx="17.5" cy="17.5" rx="0.5" ry="0.7" fill="#333"/>
+            <path d="M15.5 19.5 Q16 20 16.5 19.5" stroke="#333" stroke-width="0.5" fill="none"/>
+        </svg>
+        <svg width="30" height="36" viewBox="0 0 38 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;z-index:1;">
+            <ellipse cx="19" cy="34" rx="15" ry="7" fill="#fff" stroke="#8B4513" stroke-width="2"/>
+            <rect x="4" y="14" width="30" height="20" rx="10" fill="#fff" stroke="#8B4513" stroke-width="2"/>
+            <ellipse cx="19" cy="14" rx="15" ry="7" fill="#fff" stroke="#8B4513" stroke-width="2"/>
+            <ellipse cx="19" cy="14" rx="12" ry="5" fill="#8B4513"/>
+            <path d="M33 24 Q38 28 33 34" stroke="#8B4513" stroke-width="3" fill="none"/>
+            <g class="coffee-steam-header">
+                <path d="M13 7 Q15 2 19 7 Q23 12 25 7" stroke="#bca37f" stroke-width="2" fill="none"/>
+                <path d="M20 2 Q22 -2 26 2 Q30 6 32 2" stroke="#bca37f" stroke-width="1.5" fill="none"/>
+            </g>
+        </svg>
+    </span>
+     </a>
+    <style>
+    /* Find Store + Coffee Anim */
+    a.find-store-btn {
+        margin-left: 16px;
+        margin-right: 10px;
+        background: #fff;
+        color: #8B4513;
+        border-radius: 16px;
+        padding: 6px 14px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.95em;
+        box-shadow: 0 2px 8px rgba(139,69,19,0.08);
+        border: 1px solid #fff;
+        transition: background 0.2s, color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    a.find-store-btn:hover { background: #f6eee6; }
+
+    .header-coffee-anim {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+        position: relative;
+        width: 42px;
+        height: 34px;
+        margin-right: 8px;
+    }
+
+    /* Responsive overrides for the find store + anim (header scope) */
+    @media (max-width: 768px) {
+        a.find-store-btn {
+            padding: 5px 12px;
+            font-size: 0.9em;
+            border-radius: 14px;
+            margin-left: 10px;
+        }
+        .header-coffee-anim {
+            width: 32px;
+            height: 26px;
+        }
+    }
+    @media (max-width: 480px) {
+        a.find-store-btn {
+            padding: 4px 10px;
+            font-size: 0.85em;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .header-coffee-anim { display: none; }
+    }
+
+    .header-coffee-anim svg { display:block; }
+    .coffee-steam-header path {
+        opacity: 0.7;
+        stroke-dasharray: 32;
+        stroke-dashoffset: 0;
+        animation: steamUpHeader 2.2s infinite ease-in-out;
+    }
+    .coffee-steam-header path:nth-child(2) {
+        animation-delay: 1.1s;
+        opacity: 0.5;
+    }
+    @keyframes steamUpHeader {
+        0% { opacity: 0.7; stroke-dashoffset: 32; transform: translateY(0); }
+        60% { opacity: 1; stroke-dashoffset: 0; transform: translateY(-5px); }
+        100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-14px); }
+    }
+    /* Bee Animation */
+    .bee-anim {
+        animation: beeFly 4.5s linear infinite;
+    }
+    @keyframes beeFly {
+        0% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
+        10% { opacity:1; }
+        20% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
+        35% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
+        45% { opacity:1; transform: translateX(-5px) translateY(-2px) scale(1.1) rotate(5deg); }
+        55% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
+        65% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
+        80% { opacity:1; }
+        90% { opacity:0; }
+        100% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
+    }
+    </style>
     <button class="mobile-menu-toggle"><i class="fas fa-bars"></i></button>
     <nav>
         <ul>

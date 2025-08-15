@@ -693,13 +693,21 @@ if (isset($_GET['edit'])) {
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header-controls">
-            <h1><i class="fas fa-box-open"></i> Kelola Produk</h1>
-            <a href="index.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+    <div class="container" id="produkContainer" style="grid-template-columns: 1fr;">
+        <div class="header-controls" style="margin-bottom: 0;">
+            <h1 style="margin-bottom:0;"><i class="fas fa-box-open"></i> Kelola Produk</h1>
+            <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" id="showAddFormBtn" class="btn btn-primary" style="display:<?php echo $product_to_edit ? 'none' : 'inline-flex'; ?>; margin-bottom:0;">
+                    <i class="fas fa-plus"></i> Tambahkan Produk
+                </button>
+                <button type="button" id="cancelAddBtnHeader" class="btn btn-secondary" style="display:none; margin-bottom:0;">
+                    <i class="fas fa-times"></i> Batalkan Tambahkan
+                </button>
+                <a href="index.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
+            </div>
         </div>
-        
-        <div class="form-container fade-in">
+        <div id="addProductFormSpacer" style="height:0;"></div>
+        <div class="form-container fade-in" id="addProductFormContainer" style="display:<?php echo $product_to_edit ? 'block' : 'none'; ?>; margin-bottom:30px; margin-top:20px;<?php echo $product_to_edit ? '' : 'grid-column: 1 / 2;'; ?>">
             <h2><i class="fas fa-<?php echo $product_to_edit ? 'edit' : 'plus-circle'; ?>"></i> <?php echo $product_to_edit ? 'Edit Produk' : 'Tambah Produk Baru'; ?></h2>
             <form id="productForm" action="kelola_produk.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="product_id" value="<?php echo $product_to_edit['id'] ?? ''; ?>">
@@ -820,6 +828,10 @@ if (isset($_GET['edit'])) {
                         <a href="kelola_produk.php" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Batal Edit
                         </a>
+                    <?php else: ?>
+                        <button type="button" class="btn btn-secondary" id="cancelAddBtn">
+                            <i class="fas fa-times"></i> Batalkan Tambahkan
+                        </button>
                     <?php endif; ?>
                     <a href="index.php" class="btn btn-dashboard">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -1125,6 +1137,53 @@ if (isset($_GET['edit'])) {
             if (value > 100) this.value = 100;
             if (value < 0) this.value = 0;
         });
+    </script>
+    <script>
+    // Show Add Product Form on button click
+    document.addEventListener('DOMContentLoaded', function() {
+        var showBtn = document.getElementById('showAddFormBtn');
+        var formContainer = document.getElementById('addProductFormContainer');
+        var produkContainer = document.getElementById('produkContainer');
+        if (showBtn && formContainer && produkContainer) {
+            showBtn.addEventListener('click', function() {
+                formContainer.style.display = 'block';
+                formContainer.classList.add('fade-in');
+                showBtn.style.display = 'none';
+                produkContainer.style.gridTemplateColumns = '1fr 1.5fr';
+                formContainer.style.gridColumn = '1/2';
+                // Scroll to form
+                setTimeout(function() {
+                    formContainer.scrollIntoView({behavior:'smooth'});
+                }, 200);
+            });
+        }
+        // Jika sedang edit produk, pastikan grid 2 kolom
+        <?php if ($product_to_edit): ?>
+        produkContainer.style.gridTemplateColumns = '1fr 1.5fr';
+        formContainer.style.gridColumn = '1/2';
+        <?php endif; ?>
+    });
+    </script>
+    <script>
+    // Fungsi tombol Batalkan Tambahkan di header
+    document.addEventListener('DOMContentLoaded', function() {
+        var showBtn = document.getElementById('showAddFormBtn');
+        var cancelBtnHeader = document.getElementById('cancelAddBtnHeader');
+        var formContainer = document.getElementById('addProductFormContainer');
+        var produkContainer = document.getElementById('produkContainer');
+        if (showBtn && cancelBtnHeader && formContainer && produkContainer) {
+            // Tampilkan tombol batalkan jika form tambah produk aktif (bukan edit)
+            showBtn.addEventListener('click', function() {
+                cancelBtnHeader.style.display = 'inline-flex';
+            });
+            cancelBtnHeader.addEventListener('click', function() {
+                formContainer.style.display = 'none';
+                produkContainer.style.gridTemplateColumns = '1fr';
+                showBtn.style.display = 'inline-flex';
+                cancelBtnHeader.style.display = 'none';
+            });
+        }
+    });
     </script>
 </body>
 </html>

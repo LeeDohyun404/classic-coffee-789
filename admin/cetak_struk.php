@@ -75,6 +75,10 @@ while($item = $items_result->fetch_assoc()){
             <p>Tanggal: <?php echo date('d/m/Y H:i', strtotime($order['order_date'])); ?></p>
             <p>Pelanggan: <?php echo htmlspecialchars($order['customer_name']); ?></p>
             <p>No. HP: <?php echo htmlspecialchars($order['guest_phone']); ?></p>
+            <?php if (!empty($order['guest_email'])): ?>
+            <p>Email: <?php echo htmlspecialchars($order['guest_email']); ?></p>
+            <?php endif; ?>
+            <p>Status: <?php echo htmlspecialchars($order['status']); ?></p>
         </div>
         <hr>
         
@@ -82,7 +86,7 @@ while($item = $items_result->fetch_assoc()){
             <?php foreach($items as $item): ?>
                 <div class="item">
                     <div><?php echo htmlspecialchars($item['product_name']); ?></div>
-                    <div><?php echo $item['quantity']; ?> x Rp <?php echo number_format($item['price_per_item'], 0, ',', '.'); ?></div>
+                    <div><?php echo $item['quantity']; ?> x Rp <?php echo number_format($item['price_per_item'], 0, ',', '.'); ?> = Rp <?php echo number_format($item['price_per_item'] * $item['quantity'], 0, ',', '.'); ?></div>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -121,8 +125,18 @@ while($item = $items_result->fetch_assoc()){
         
         <hr>
         <div class="details">
-            <p><strong>Metode:</strong> <?php echo htmlspecialchars($order['payment_method']); ?></p>
-            
+            <p><strong>Metode Pengambilan:</strong> <?php
+                if ($order['guest_address'] === 'Ambil Ditempat') {
+                    echo 'Ambil Ditempat';
+                } elseif (stripos($order['payment_method'], 'cod') !== false) {
+                    echo 'COD';
+                } else {
+                    echo 'Delivery';
+                }
+            ?></p>
+            <p><strong>Metode Pembayaran:</strong> <?php echo !empty($order['payment_choice']) ? htmlspecialchars(ucfirst($order['payment_choice'])) : htmlspecialchars($order['payment_method']); ?></p>
+            <p><strong>Status Pembayaran:</strong> <?php echo htmlspecialchars(ucfirst($order['status'])); ?></p>
+            <p><strong>Metode (Sistem):</strong> <?php echo htmlspecialchars($order['payment_method']); ?></p>
             <?php if ($order['guest_address'] !== 'Ambil Ditempat'): ?>
             <p><strong>Alamat:</strong> <?php echo htmlspecialchars($order['guest_address']); ?></p>
             <?php endif; ?>

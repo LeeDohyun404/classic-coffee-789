@@ -30,7 +30,15 @@ if ($slides_result && $slides_result->num_rows > 0) {
         overflow: hidden; 
         box-shadow: 0 15px 35px rgba(0,0,0,0.15);
         margin-bottom: 60px;
-        background: linear-gradient(135deg, #f4f7f6 0%, #e8f0ef 100%);
+        /* Brick pattern background */
+        background-color: #e8e0d1;
+        background-image:
+            repeating-linear-gradient(90deg, #bfa07a 0 40px, transparent 40px 80px),
+            repeating-linear-gradient(180deg, #bfa07a 0 20px, transparent 20px 40px),
+            repeating-linear-gradient(90deg, #a67c52 0 42px, transparent 42px 82px),
+            repeating-linear-gradient(180deg, #a67c52 0 22px, transparent 22px 42px);
+        background-size: 80px 40px, 80px 40px, 82px 42px, 82px 42px;
+        background-position: 0 0, 0 20px, 41px 21px, 41px 41px;
     }
     
     .slide { 
@@ -606,7 +614,36 @@ if ($slides_result && $slides_result->num_rows > 0) {
     }
 </style>
 
-<div class="home-container">
+<div class="home-container" style="position:relative;">
+    <!-- Bee Animation di luar slider -->
+    <svg class="bee-fly-slider" width="48" height="48" viewBox="0 0 32 32" style="position:absolute;top:40px;left:calc(100% - 60px);z-index:10;pointer-events:none;animation:beeFlySlider 6s linear infinite;">
+        <ellipse cx="16" cy="18" rx="7" ry="5" fill="#FFD700" stroke="#8B4513" stroke-width="1.5"/>
+        <rect x="13" y="15" width="2" height="6" fill="#8B4513"/>
+        <rect x="17" y="15" width="2" height="6" fill="#8B4513"/>
+        <ellipse cx="13" cy="13" rx="3" ry="2" fill="#e0f7fa" stroke="#8B4513" stroke-width="0.7"/>
+        <ellipse cx="19" cy="13" rx="3" ry="2" fill="#e0f7fa" stroke="#8B4513" stroke-width="0.7"/>
+        <circle cx="16" cy="18" r="1.2" fill="#fff"/>
+        <ellipse cx="14.5" cy="17.5" rx="0.5" ry="0.7" fill="#333"/>
+        <ellipse cx="17.5" cy="17.5" rx="0.5" ry="0.7" fill="#333"/>
+        <path d="M15.5 19.5 Q16 20 16.5 19.5" stroke="#333" stroke-width="0.5" fill="none"/>
+    </svg>
+    <style>
+    @keyframes beeFlySlider {
+        0% { opacity:0; transform: translateX(0) translateY(0) scale(0.8) rotate(-10deg); }
+        10% { opacity:1; }
+        20% { opacity:1; transform: translateX(-30vw) translateY(10px) scale(1) rotate(-5deg); }
+        35% { opacity:1; transform: translateX(-45vw) translateY(0) scale(1.1) rotate(0deg); }
+        45% { opacity:1; transform: translateX(-50vw) translateY(-10px) scale(1.1) rotate(5deg); }
+        55% { opacity:1; transform: translateX(-45vw) translateY(0) scale(1.1) rotate(0deg); }
+        65% { opacity:1; transform: translateX(-30vw) translateY(10px) scale(1) rotate(-5deg); }
+        80% { opacity:1; }
+        90% { opacity:0; }
+        100% { opacity:0; transform: translateX(0) translateY(0) scale(0.8) rotate(-10deg); }
+    }
+    .bee-fly-slider {
+        filter: drop-shadow(0 2px 6px rgba(90,58,34,0.12));
+    }
+    </style>
     <section class="hero-slider">
         <?php foreach ($slides as $index => $slide): ?>
             <div class="slide <?php echo $index === 0 ? 'active' : ''; ?>">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: sql113.infinityfree.com
--- Waktu pembuatan: 05 Agu 2025 pada 10.24
+-- Waktu pembuatan: 14 Agu 2025 pada 09.58
 -- Versi server: 11.4.7-MariaDB
 -- Versi PHP: 7.2.22
 
@@ -42,11 +42,11 @@ CREATE TABLE `hero_slides` (
 --
 
 INSERT INTO `hero_slides` (`id`, `image_url`, `title`, `subtitle`, `is_active`, `sort_order`) VALUES
-(1, 'slide_688df03b51863.jpg', 'â˜• Selamat Datang di Classic Coffee 789', '\"Satu Botol Kopi Klasik Yang Kamu Beli, 1000 Doa Dan Harapan Untuk Masa Depan Petani Lokal\".', 1, 1),
-(2, 'slide_688df72c2be84.jpg', 'â˜• Selamat Datang di Classic Coffee 789', '\"Beli Satu Kurang, Beli Dua Nambah.\"', 1, 2),
-(4, 'slide_6892105fefa31.jpg', '\"Hemat 10% dengan Ambil di Tempat!\"', 'ðŸŽ‰ Mau lebih hemat?\r\nDapatkan DISKON 10% khusus untuk pembelian dengan metode Ambil di Tempat (Pick Up)!\r\nðŸ“ Cukup pesan, datang, dan ambil langsung di lokasi kami â€” tanpa biaya kirim, tanpa ribet!\r\nðŸ“† Promo berlaku 3 - 31 Agustus 2025!\r\nðŸ’¬ Info Lokasi: Desa Kebanaran, Tamanwinangun RT 03/ RW 08 No.59\r\nYuk, manfaatkan kesempatan ini. Hematnya dapet, cepatnya juga iya!', 1, 3),
+(1, 'slide_689373154fb74.jpg', 'â˜• Selamat Datang di Classic Coffee 789', '\"Satu Botol Kopi Klasik Yang Kamu Beli, 1000 Doa Dan Harapan Untuk Masa Depan Petani Lokal\".', 1, 5),
+(2, 'slide_68937304d8752.jpg', 'â˜• Selamat Datang di Classic Coffee 789', '\"Beli Satu Kurang, Beli Dua Nambah.\"', 1, 3),
+(4, 'slide_689372dee83cd.jpg', '\"Hemat 10% dengan Ambil di Tempat!\"', 'ðŸŽ‰ Mau lebih hemat?\r\nDapatkan DISKON 10% khusus untuk pembelian dengan metode Ambil di Tempat (Pick Up)!\r\nðŸ“ Cukup pesan, datang, dan ambil langsung di lokasi kami â€” tanpa biaya kirim, tanpa ribet!\r\nðŸ“† Promo berlaku 3 - 31 Agustus 2025!\r\nðŸ’¬ Info Lokasi: Desa Kebanaran, Tamanwinangun RT 03/ RW 08 No.59\r\nYuk, manfaatkan kesempatan ini. Hematnya dapet, cepatnya juga iya!', 1, 2),
 (5, 'slide_68920fb91370d.jpg', 'Promo Merdeka! Diskon 10% ðŸŽ‰', 'ðŸ”¥ Spesial 17 Agustus\r\nðŸ“ Ambil di tempat, langsung hemat\r\nðŸŽ Diskon 10% tanpa syarat ribet!\r\nðŸ“² Info: [kontak Anda]', 0, 4),
-(6, 'slide_6892113e0743d.jpg', 'ðŸŽ‰ Promo Spesial 7â€¢8â€¢9 Agustus â€“ Diskon 10%!', 'ðŸ“† Hanya 3 Hari!\r\nðŸ›ï¸ Diskon 10% untuk pembelian Ambil di Tempat\r\nðŸ“ Tanpa ongkir, langsung hemat!\r\nâ³ Berlaku: 7 â€“ 9 Agustus 2025\r\nðŸ“² Info & pesanan: [kontak Anda]', 0, 5);
+(6, 'slide_689372915e0c5.jpeg', 'ðŸŽ‰ Promo Spesial 789 Agustus â€“ Diskon 10%!', 'ðŸ“† Hanya 3 Hari!\r\nðŸ›ï¸ Diskon 10% untuk semua varian \r\nðŸ“ Semua metode pembelian dan pengambilan \r\nâ³ Berlaku: 7 â€“ 9 Agustus 2025', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -93,7 +93,16 @@ INSERT INTO `orders` (`id`, `user_id`, `guest_name`, `guest_address`, `guest_pho
 (185, NULL, 'Fersellia', 'Ambil Ditempat', '08988836421', 'fersellia98@gmail.com', '18900.00', '0.00', 'Takeaway', '0.00', '0.00', 'Confirmation Required', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=%F0%9F%A7%BE+%2APesanan+Baru+Diterima%2A+%F0%9F%A7%BE%0A%0A%2ARef+Order+ID%3A+%23185%2A%0A%0A%E2%9C%A8+%2ADETAIL+PESANAN%2A+%E2%9C%A8%0A-%3E+%2AKopi+Susu+Gula+Aren%2A%0A+++1+x+Rp+21.000+%3D+Rp+21.000%0A%0A%F0%9F%92%B0+%2ARINCIAN+BIAYA%2A+%F0%9F%92%B0%0ASubtotal%3A+Rp+21.000%0ADiskon+Ambil+Ditempat%3A+-Rp+2.100%0A--------------------%0A%2ATOTAL+AKHIR%3A+Rp+18.900%2A%0A%0A%F0%9F%91%A4+%2ADATA+PELANGGAN%2A+%F0%9F%91%A4%0ANama%3A+Fersellia%0ANo.+HP%3A+08988836421%0A%0A%F0%9F%9A%9A+%2APENGIRIMAN+%26+PEMBAYARAN%2A+%F0%9F%9A%9A%0APembayaran%3A+%2ACASH%2A%0APengambilan%3A+%2APickup%2A%0AJadwal%3A+Senin%2C+04+Aug+2025%2C+00%3A00%0A%0A_Mohon+segera+diproses.+Terima+kasih%21_', '', 'Senin, 04 Aug 2025, 00:00', '2025-08-04 10:03:40'),
 (189, NULL, 'Zulfa', 'Ambil Ditempat', '081578134267', 'zulfapratamaningtyas@gmail.com', '9900.00', '0.00', 'Takeaway', '0.00', '0.00', 'Confirmation Required', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=%F0%9F%A7%BE++%2APesanan+Baru+Diterima%2A+%F0%9F%A7%BE+%0A%0A%2ARef+Order+ID%3A+%23189%2A%0A%0A%E2%9C%A8++%2ADETAIL+PESANAN%2A+%E2%9C%A8+%0A-%3E+%2ABurger+Mini+Beef+Patties%2A%0A+++1+x+Rp+11.000+%3D+Rp+11.000%0A%0A%F0%9F%92%B0++%2ARINCIAN+BIAYA%2A+%F0%9F%92%B0+%0ASubtotal%3A+Rp+11.000%0ADiskon+Ambil+Ditempat%3A+-Rp+1.100%0A--------------------%0A%2ATOTAL+AKHIR%3A+Rp+9.900%2A%0A%0A%F0%9F%91%A4++%2ADATA+PELANGGAN%2A+%F0%9F%91%A4+%0ANama%3A+Zulfa%0ANo.+HP%3A+081578134267%0A%0A%F0%9F%9A%9A++%2APENGIRIMAN+%26+PEMBAYARAN%2A+%F0%9F%9A%9A+%0APembayaran%3A+%2ACASH%2A%0APengambilan%3A+%2APickup%2A%0AJadwal%3A+Senin%2C+04+Aug+2025%2C+20%3A00%0A%0A_Mohon+segera+diproses.+Terima+kasih%21_', '', 'Senin, 04 Aug 2025, 20:00', '2025-08-04 12:49:10'),
 (209, NULL, 'Ani Wahyuni ', 'Ambil Ditempat', '087737620014', 'aniwahyuni562@gmail.com', '18000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A%0ASubtotal+Asli%3A+Rp+20.000%0ADiskon+Produk%3A+-Rp+2.000%0A%2ATotal+Akhir%3A+Rp+18.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Ani+Wahyuni+%0ANo.+HP%3A+087737620014%0A%0A%2ACatatan+Pesanan%3A%2A%0ASugar+normal%0D%0ACapuccino+%0A%0A%2AJadwal%3A%2A%0ASelasa%2C+05+Aug+2025+-+Jam+08%3A54%0A%0AMetode%3A+%2AAmbil+Ditempat%2A%0A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+209%29', 'Sugar normal\r\nCapuccino ', 'Selasa, 05 Aug 2025 - Jam 08:54', '2025-08-05 05:55:29'),
-(225, NULL, 'Zulfa', 'Ambil Ditempat', '081578134267', '', '18000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A%0ASubtotal+Asli%3A+Rp+20.000%0ATotal+Diskon+Produk%3A+-Rp+2.000%0A%2ATotal+Akhir%3A+Rp+18.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Zulfa%0ANo.+HP%3A+081578134267%0A%0A%2AJadwal%3A%2A%0ASelasa%2C+05+Aug+2025+-+Jam+15%3A30%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+225%29', '', 'Selasa, 05 Aug 2025 - Jam 15:30', '2025-08-05 08:18:16');
+(225, NULL, 'Zulfa', 'Ambil Ditempat', '081578134267', '', '18000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A%0ASubtotal+Asli%3A+Rp+20.000%0ATotal+Diskon+Produk%3A+-Rp+2.000%0A%2ATotal+Akhir%3A+Rp+18.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Zulfa%0ANo.+HP%3A+081578134267%0A%0A%2AJadwal%3A%2A%0ASelasa%2C+05+Aug+2025+-+Jam+15%3A30%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+225%29', '', 'Selasa, 05 Aug 2025 - Jam 15:30', '2025-08-05 08:18:16'),
+(226, NULL, 'Tari', 'Ambil Ditempat', '', '', '87300.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A-%3E+Hazelnut+Latte+%28Ella%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A-%3E+Kopi+Susu+Gula+Aren%0A+++Qty%3A+1+x+Rp+18.900+%3D+Rp+18.900%0A-%3E+Kopi+Susu+Original%0A+++Qty%3A+1+x+Rp+16.200+%3D+Rp+16.200%0A-%3E+Lychee+Latte+%28Lyla%29%0A+++Qty%3A+1+x+Rp+16.200+%3D+Rp+16.200%0A%0ASubtotal+Asli%3A+Rp+97.000%0ATotal+Diskon+Produk%3A+-Rp+9.700%0A%2ATotal+Akhir%3A+Rp+87.300%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Tari%0ANo.+HP%3A+%0A%0A%2AJadwal%3A%2A%0AKamis%2C+07+Aug+2025+-+Jam+17%3A00%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+226%29', '', 'Kamis, 07 Aug 2025 - Jam 17:00', '2025-08-07 09:52:04'),
+(228, NULL, 'Yuli Febriana', 'Ambil Ditempat', '082226052645', '', '18000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'qris', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A%0ASubtotal+Asli%3A+Rp+20.000%0ATotal+Diskon+Produk%3A+-Rp+2.000%0A%2ATotal+Akhir%3A+Rp+18.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Yuli+Febriana%0ANo.+HP%3A+082226052645%0A%0A%2AJadwal%3A%2A%0AKamis%2C+07+Aug+2025+-+Jam+17%3A10%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2AQRIS%2A%0A_%28Mohon+kirim+bukti+transfer%29_%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+228%29', '', 'Kamis, 07 Aug 2025 - Jam 17:10', '2025-08-07 10:02:33'),
+(231, NULL, 'Ani Wahyuni ', 'Ambil Ditempat', '087737620014', 'aniwahyuni562@gmail.com', '18000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+18.000+%3D+Rp+18.000%0A%0ASubtotal+Asli%3A+Rp+20.000%0ATotal+Diskon+Produk%3A+-Rp+2.000%0A%2ATotal+Akhir%3A+Rp+18.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Ani+Wahyuni+%0ANo.+HP%3A+087737620014%0A%0A%2AJadwal%3A%2A%0AKamis%2C+07+Aug+2025+-+Jam+19%3A08%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+231%29', '', 'Kamis, 07 Aug 2025 - Jam 19:08', '2025-08-07 12:08:18'),
+(232, NULL, 'rachmad siswono', 'Ambil Ditempat', '08981382024', 'rachmadsiswono@gmail.com', '54000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+3+x+Rp+18.000+%3D+Rp+54.000%0A%0ASubtotal+Asli%3A+Rp+60.000%0ATotal+Diskon+Produk%3A+-Rp+6.000%0A%2ATotal+Akhir%3A+Rp+54.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+rachmad+siswono%0ANo.+HP%3A+08981382024%0A%0A%2ACatatan+Pesanan%3A%2A%0ADi+ambil+jm+9%0A%0A%2AJadwal%3A%2A%0AJumat%2C+08+Aug+2025+-+Jam+21%3A30%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+232%29', 'Di ambil jm 9', 'Jumat, 08 Aug 2025 - Jam 21:30', '2025-08-08 14:30:36'),
+(233, NULL, 'Bu Jury', 'Ambil Ditempat', '+62 822-2101-9491', '', '54900.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+2+x+Rp+18.000+%3D+Rp+36.000%0A-%3E+Kopi+Susu+Gula+Aren%0A+++Qty%3A+1+x+Rp+18.900+%3D+Rp+18.900%0A%0ASubtotal+Asli%3A+Rp+61.000%0ATotal+Diskon+Produk%3A+-Rp+6.100%0A%2ATotal+Akhir%3A+Rp+54.900%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Bu+Jury%0ANo.+HP%3A+%2B62+822-2101-9491%0A%0A%2AJadwal%3A%2A%0AJumat%2C+08+Aug+2025+-+Jam+22%3A33%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+233%29', '', 'Jumat, 08 Aug 2025 - Jam 22:33', '2025-08-08 15:31:50'),
+(234, NULL, 'Paryatun', 'Ambil Ditempat', '087769745676', 'aryat4659@gmail.com', '16200.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Kopi+Susu+Original%0A+++Qty%3A+1+x+Rp+16.200+%3D+Rp+16.200%0A%0ASubtotal+Asli%3A+Rp+18.000%0ATotal+Diskon+Produk%3A+-Rp+1.800%0A%2ATotal+Akhir%3A+Rp+16.200%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Paryatun%0ANo.+HP%3A+087769745676%0A%0A%2AJadwal%3A%2A%0ASabtu%2C+09+Aug+2025+-+Jam+11%3A00%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+234%29', '', 'Sabtu, 09 Aug 2025 - Jam 11:00', '2025-08-08 15:41:07'),
+(236, NULL, 'Bu Novi Disnaker', 'BLK', '+62 812-2522-5065', '', '40000.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Special+Burger+Beef+Patties%0A+++Qty%3A+2+x+Rp+20.000+%3D+Rp+40.000%0A%0ASubtotal+Asli%3A+Rp+40.000%0A%2ATotal+Akhir%3A+Rp+40.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Bu+Novi+Disnaker%0ANo.+HP%3A+%2B62+812-2522-5065%0A%0A%2AJadwal%3A%2A%0AMinggu%2C+10+Aug+2025+-+Jam+18%3A00%0AMetode%3A+%2AOngkir%2A%0AAlamat+Pengiriman%3A%0ABLK%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+236%29', '', 'Minggu, 10 Aug 2025 - Jam 18:00', '2025-08-10 10:48:51'),
+(237, NULL, 'Retno W', 'Karangrejo,karanggayam', '081291849029', '', '27000.00', '0.00', NULL, '0.00', '0.00', 'COD', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+27.000+%3D+Rp+27.000%0A%0ASubtotal+Asli%3A+Rp+27.000%0A%2ATotal+Akhir%3A+Rp+27.000%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Retno+W%0ANo.+HP%3A+081291849029%0A%0A%2AJadwal%3A%2A%0ASenin%2C+11+Aug+2025+-+Jam+12%3A00%0AMetode%3A+%2ACOD%2A%0ALokasi+COD%3A%0AKarangrejo%2Ckaranggayam%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+237%29', '', 'Senin, 11 Aug 2025 - Jam 12:00', '2025-08-11 02:50:47'),
+(240, NULL, 'Bu sar', 'Ambil Ditempat', '', '', '22140.00', '0.00', NULL, '0.00', '0.00', 'WhatsApp', 'cash', 'paid', 'https://api.whatsapp.com/send?phone=6289669505208&text=Halo+Classic+Coffee+789%2C+ada+pesanan+baru%3A%0A%0A-%3E+Caramel+Latte+%28Carla%29%0A+++Qty%3A+1+x+Rp+22.140+%3D+Rp+22.140%0A%0ASubtotal+Asli%3A+Rp+27.000%0ATotal+Diskon+Produk%3A+-Rp+4.860%0A%2ATotal+Akhir%3A+Rp+22.140%2A%0A%0ABerikut+data+pelanggan%3A%0ANama%3A+Bu+sar%0ANo.+HP%3A+%0A%0A%2AJadwal%3A%2A%0AKamis%2C+14+Aug+2025+-+Jam+16%3A37%0AMetode%3A+%2AAmbil+Ditempat%2A%0APembayaran%3A+%2ACASH+%28Bayar+di+Tempat%29%2A%0A%0AMohon+konfirmasinya.+Terima+kasih.%0A%28Ref+Order+ID%3A+240%29', '', 'Kamis, 14 Aug 2025 - Jam 16:37', '2025-08-14 09:38:09');
 
 -- --------------------------------------------------------
 
@@ -131,7 +140,21 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price_pe
 (189, 185, 99, 1, '21000.00'),
 (193, 189, 86, 1, '11000.00'),
 (213, 209, 97, 1, '20000.00'),
-(230, 225, 97, 1, '20000.00');
+(230, 225, 97, 1, '20000.00'),
+(231, 226, 97, 1, '20000.00'),
+(232, 226, 15, 1, '20000.00'),
+(233, 226, 99, 1, '21000.00'),
+(234, 226, 98, 1, '18000.00'),
+(235, 226, 96, 1, '18000.00'),
+(237, 228, 97, 1, '20000.00'),
+(240, 231, 97, 1, '20000.00'),
+(241, 232, 97, 3, '20000.00'),
+(242, 233, 97, 2, '20000.00'),
+(243, 233, 99, 1, '21000.00'),
+(244, 234, 98, 1, '18000.00'),
+(246, 236, 89, 2, '20000.00'),
+(247, 237, 97, 1, '27000.00'),
+(250, 240, 97, 1, '27000.00');
 
 -- --------------------------------------------------------
 
@@ -170,37 +193,40 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `price`, `discount_percentage`, `discount_methods`, `discount_name`, `image_url`, `category`) VALUES
-(15, 'Hazelnut Latte (Ella)', '20000.00', 10, 'pickup', NULL, 'prod_688b21a691c58.jpg', 'minuman-kopi'),
-(76, 'Paket Hemat Kopi', '29500.00', 10, 'pickup', NULL, 'prod_6880b9820fccc.png', 'paket-kopi'),
-(77, 'Paket Kenyang Kopi', '33500.00', 10, 'pickup', NULL, 'prod_6880b9ab7a251.png', 'paket-kopi'),
-(78, 'Paket Sharing Kopi', '33500.00', 10, 'pickup', NULL, 'prod_6880b9e2b9d40.png', 'paket-kopi'),
-(79, 'Paket Sultan Kopi', '47500.00', 10, 'pickup', NULL, 'prod_6880b9f73064a.png', 'paket-kopi'),
-(80, 'Paket Santai Kopi', '38000.00', 10, 'pickup', NULL, 'prod_6880b9c4bea7b.png', 'paket-kopi'),
-(81, 'Paket Sultan Thai Tea', '36000.00', 10, 'pickup', NULL, 'prod_6880baca81b9c.png', 'paket-teh'),
-(82, 'Paket Sharing Thai Tea', '22000.00', 10, 'pickup', NULL, 'prod_6880ba906e895.png', 'paket-teh'),
-(83, 'Paket Kenyang Thai Tea', '22000.00', 10, 'pickup', NULL, 'prod_6880ba5f497d1.png', 'paket-teh'),
-(84, 'Paket Santai Thai Tea', '27000.00', 10, 'pickup', NULL, 'prod_6880ba774cd39.png', 'paket-teh'),
-(85, 'Paket Hemat Thai Tea', '18000.00', 10, 'pickup', NULL, 'prod_6880ba3fee0da.png', 'paket-teh'),
-(86, 'Burger Mini Beef Patties', '11000.00', 10, 'pickup', NULL, 'prod_6880b6d3360a4.jfif', 'makanan'),
-(87, 'Burger Mini Beef Slice', '8000.00', 10, 'pickup', NULL, 'prod_6880b6eac0bbe.jfif', 'makanan'),
-(88, 'Burger Mini Chicken', '9000.00', 10, 'pickup', NULL, 'prod_6880b72ca99a9.jfif', 'makanan'),
-(89, 'Special Burger Beef Patties', '20000.00', 10, 'pickup', NULL, 'prod_6880b7784d9c9.jfif', 'makanan'),
-(90, 'Special Burger Beef Slice', '13000.00', 10, 'pickup', NULL, 'prod_6880b78234936.jfif', 'makanan'),
-(91, 'Special Burger Chicken', '15000.00', 10, 'pickup', NULL, 'prod_6880b78e00b5f.jfif', 'makanan'),
-(92, 'Dimsum', '15000.00', 10, 'pickup', NULL, 'prod_6880b73b6fdbc.jfif', 'makanan'),
-(93, 'Spaghetti Bolognese', '15000.00', 10, 'pickup', NULL, 'prod_6880b75fcbc76.jfif', 'makanan'),
-(95, 'Sakura Latte (Ralat)', '18000.00', 10, 'pickup', NULL, 'prod_688b21c67e47c.jpg', 'minuman-kopi'),
-(96, 'Lychee Latte (Lyla)', '18000.00', 10, 'pickup', NULL, 'prod_688b21b5a8e7e.jpg', 'minuman-kopi'),
-(97, 'Caramel Latte (Carla)', '20000.00', 10, 'pickup', NULL, 'prod_688b208fee4c4.jpg', 'minuman-kopi'),
-(98, 'Kopi Susu Original', '18000.00', 10, 'pickup', NULL, 'prod_6880b858a9ead.jfif', 'minuman-kopi'),
-(99, 'Kopi Susu Gula Aren', '21000.00', 10, 'pickup', NULL, 'prod_6880b84b871c9.jfif', 'minuman-kopi'),
-(100, 'Milk Base Mangga', '17000.00', 10, 'pickup', NULL, 'prod_6880b8c563f5d.png', 'minuman-nonkopi'),
-(101, 'Milk Base Red Velvet', '17000.00', 10, 'pickup', NULL, 'prod_6880b8daa54ba.jfif', 'minuman-nonkopi'),
-(102, 'Thai Tea Original', '8000.00', 10, 'pickup', NULL, 'prod_6880b94c6baeb.jfif', 'minuman-nonkopi'),
-(103, 'Thai Tea Lychee', '8000.00', 10, 'pickup', NULL, 'prod_6880b926948f1.png', 'minuman-nonkopi'),
-(104, 'Thai Tea Milk', '8000.00', 10, 'pickup', NULL, 'prod_6880b938a6e0d.jfif', 'makanan'),
-(105, 'Thai Tea Lemon', '8000.00', 10, 'pickup', NULL, 'prod_6880b90fc4a00.png', 'minuman-nonkopi'),
-(110, 'Kopi V60', '15000.00', 10, 'pickup', NULL, 'prod_68889cc50b750.png', 'minuman-kopi');
+(15, 'Hazelnut Latte (Ella)', '27000.00', 18, 'pickup', NULL, 'prod_68949da856b6c.jpg', 'minuman-kopi'),
+(76, 'Paket Hemat Kopi', '36500.00', 8, 'pickup', NULL, 'prod_68949f0320500.png', 'paket-kopi'),
+(77, 'Paket Kenyang Kopi', '40500.00', 8, 'pickup', NULL, 'prod_68949f203f2f8.png', 'paket-kopi'),
+(78, 'Paket Sharing Kopi', '40500.00', 8, 'pickup', NULL, 'prod_68949f5bef0e1.png', 'paket-kopi'),
+(79, 'Paket Sultan Kopi', '54500.00', 8, 'pickup', NULL, 'prod_68949f6f04221.png', 'paket-kopi'),
+(80, 'Paket Santai Kopi', '45000.00', 8, 'pickup', NULL, 'prod_68949f4699b5c.png', 'paket-kopi'),
+(81, 'Paket Sultan Thai Tea', '36000.00', 10, 'pickup', NULL, 'prod_68949fddd1d48.png', 'paket-teh'),
+(82, 'Paket Sharing Thai Tea', '22000.00', 10, 'pickup', NULL, 'prod_68949fbdcff42.png', 'paket-teh'),
+(83, 'Paket Kenyang Thai Tea', '22000.00', 10, 'pickup', NULL, 'prod_68949f9e6beab.png', 'paket-teh'),
+(84, 'Paket Santai Thai Tea', '27000.00', 10, 'pickup', NULL, 'prod_68949fae718ec.png', 'paket-teh'),
+(85, 'Paket Hemat Thai Tea', '18000.00', 10, 'pickup', NULL, 'prod_68949f84bfcb7.png', 'paket-teh'),
+(86, 'Burger Mini Beef Patties', '11000.00', 10, 'pickup', NULL, 'prod_68949d203b2ae.jfif', 'makanan'),
+(87, 'Burger Mini Beef Slice', '8000.00', 10, 'pickup', NULL, 'prod_68949d31b6524.jfif', 'makanan'),
+(88, 'Burger Mini Chicken', '9000.00', 10, 'pickup', NULL, 'prod_68949d4065e50.jfif', 'makanan'),
+(89, 'Special Burger Beef Patties', '20000.00', 10, 'pickup', NULL, 'prod_68949d686ee6f.jfif', 'makanan'),
+(90, 'Special Burger Beef Slice', '13000.00', 10, 'pickup', NULL, 'prod_68949d79c6afd.jfif', 'makanan'),
+(91, 'Special Burger Chicken', '15000.00', 10, 'pickup', NULL, 'prod_68949d88761d9.jfif', 'makanan'),
+(92, 'Dimsum', '15000.00', 10, 'pickup', NULL, 'prod_68949d4bd3c0f.jfif', 'makanan'),
+(93, 'Spaghetti Bolognese', '15000.00', 10, 'pickup', NULL, 'prod_68949d580ed71.jfif', 'makanan'),
+(95, 'Sakura Latte (Ralat)', '25000.00', 18, 'pickup', NULL, 'prod_68949e04880ff.jpg', 'minuman-kopi'),
+(96, 'Lychee Latte (Lyla)', '25000.00', 18, 'pickup', NULL, 'prod_68949df515d55.jpg', 'minuman-kopi'),
+(97, 'Caramel Latte (Carla)', '27000.00', 18, 'pickup', NULL, 'prod_68949d9795918.jpg', 'minuman-kopi'),
+(98, 'Kopi Susu Original', '25000.00', 18, 'pickup', NULL, 'prod_68949dd55c92d.jfif', 'minuman-kopi'),
+(99, 'Kopi Susu Gula Aren', '28000.00', 18, 'pickup', NULL, 'prod_68949dc894454.jfif', 'minuman-kopi'),
+(100, 'Milk Base Mangga', '17000.00', 10, 'pickup', NULL, 'prod_68949e14abbeb.png', 'minuman-nonkopi'),
+(101, 'Milk Base Red Velvet', '17000.00', 10, 'pickup', NULL, 'prod_68949e217c7a7.jfif', 'minuman-nonkopi'),
+(102, 'Thai Tea Original', '8000.00', 10, 'pickup', NULL, 'prod_68949eec34364.jfif', 'minuman-nonkopi'),
+(103, 'Thai Tea Lychee', '8000.00', 10, 'pickup', NULL, 'prod_68949ecf761e6.png', 'minuman-nonkopi'),
+(104, 'Thai Tea Milk', '8000.00', 10, 'pickup', NULL, 'prod_68949ee00d10f.jfif', 'minuman-nonkopi'),
+(105, 'Thai Tea Lemon', '8000.00', 10, 'pickup', NULL, 'prod_68949e9d834e0.png', 'minuman-nonkopi'),
+(110, 'Kopi V60', '15000.00', 10, 'pickup', NULL, 'prod_68949de6447ff.png', 'minuman-kopi'),
+(113, 'Kopi Bubuk Rp 30.000/ 100gr', '30000.00', 0, NULL, NULL, 'prod_68949db996a01.jpg', 'minuman-kopi'),
+(115, 'Kopi Bubuk Rp 115.000/ 500gr', '115000.00', 0, NULL, NULL, 'prod_689b472a46ec0.jpg', 'minuman-kopi'),
+(116, 'Kopi Bubuk Rp 15.000/ 55gr', '15000.00', 0, NULL, NULL, 'prod_689b47616c80b.jpg', 'minuman-kopi');
 
 -- --------------------------------------------------------
 
@@ -336,19 +362,19 @@ ALTER TABLE `vouchers`
 -- AUTO_INCREMENT untuk tabel `hero_slides`
 --
 ALTER TABLE `hero_slides`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 
 --
 -- AUTO_INCREMENT untuk tabel `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
 
 --
 -- AUTO_INCREMENT untuk tabel `order_voucher_usage`
@@ -360,13 +386,13 @@ ALTER TABLE `order_voucher_usage`
 -- AUTO_INCREMENT untuk tabel `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT untuk tabel `vouchers`
