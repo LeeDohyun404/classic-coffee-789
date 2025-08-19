@@ -5,6 +5,16 @@ if (!isset($_SESSION['admin_logged_in'])) {
     exit();
 }
 require_once '../config.php';
+// --- TAMBAHAN BARU: LOGIKA UNTUK MENGUBAH STATUS DISKON ---
+if (isset($_GET['toggle_diskon'])) {
+    $status_baru = $_GET['toggle_diskon'];
+    if ($status_baru === 'aktif' || $status_baru === 'nonaktif') {
+        file_put_contents(DISKON_STATUS_FILE, $status_baru);
+    }
+    header("Location: kelola_produk.php?status=toggled");
+    exit();
+}
+// --- AKHIR TAMBAHAN BARU ---
 $message = '';
 $error = '';
 
@@ -267,6 +277,31 @@ if (isset($_GET['edit'])) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
         }
+        /* ================================== */
+        /* === TAMBAHKAN KODE BARU DI SINI === */
+        /* ================================== */
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        /* ================================== */
+        /* === AKHIR DARI KODE BARU       === */
+        /* ================================== */
         
         .form-buttons { 
             display: flex; 
@@ -694,15 +729,25 @@ if (isset($_GET['edit'])) {
 </head>
 <body>
     <div class="container" id="produkContainer" style="grid-template-columns: 1fr;">
-        <div class="header-controls" style="margin-bottom: 0;">
-            <h1 style="margin-bottom:0;"><i class="fas fa-box-open"></i> Kelola Produk</h1>
-            <div style="display:flex;gap:10px;align-items:center;">
-                <button type="button" id="showAddFormBtn" class="btn btn-primary" style="display:<?php echo $product_to_edit ? 'none' : 'inline-flex'; ?>; margin-bottom:0;">
-                    <i class="fas fa-plus"></i> Tambahkan Produk
-                </button>
-                <button type="button" id="cancelAddBtnHeader" class="btn btn-secondary" style="display:none; margin-bottom:0;">
-                    <i class="fas fa-times"></i> Batalkan Tambahkan
-                </button>
+    <div class="header-controls" style="margin-bottom: 0;">
+        <h1 style="margin-bottom:0;"><i class="fas fa-box-open"></i> Kelola Produk</h1>
+        <div style="display:flex;gap:10px;align-items:center;">
+
+            <?php if (GLOBAL_DISKON_AKTIF): ?>
+                <a href="kelola_produk.php?toggle_diskon=nonaktif" class="btn btn-danger" style="margin-bottom:0;">
+                    <i class="fas fa-power-off"></i> Nonaktifkan Semua Diskon
+                </a>
+            <?php else: ?>
+                <a href="kelola_produk.php?toggle_diskon=aktif" class="btn btn-success" style="margin-bottom:0;">
+                    <i class="fas fa-check-circle"></i> Aktifkan Semua Diskon
+                </a>
+            <?php endif; ?>
+            <button type="button" id="showAddFormBtn" class="btn btn-primary" style="display:<?php echo $product_to_edit ? 'none' : 'inline-flex'; ?>; margin-bottom:0;">
+                <i class="fas fa-plus"></i> Tambahkan Produk
+            </button>
+            <button type="button" id="cancelAddBtnHeader" class="btn btn-secondary" style="display:none; margin-bottom:0;">
+                <i class="fas fa-times"></i> Batalkan Tambahkan
+            </button>
                 <a href="index.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</a>
             </div>
         </div>

@@ -48,7 +48,7 @@ if (!empty($cart)) {
             $final_price = $original_price;
             $manual_discount_amount_per_item = 0;
 
-            if ($product['discount_percentage'] > 0) {
+            if (GLOBAL_DISKON_AKTIF && $product['discount_percentage'] > 0) {
                 $manual_discount_amount_per_item = ($original_price * $product['discount_percentage']) / 100;
                 $final_price = $original_price - $manual_discount_amount_per_item;
                 
@@ -524,18 +524,20 @@ if ($total_belanja < 0) $total_belanja = 0;
                             <div>
                                 <div class="product-name"><?php echo htmlspecialchars($item['name']); ?></div>
                                 <div class="price-display">
-                                    <?php if ($item['discount_percentage'] > 0 && !($voucher_discount > 0 && $item['id'] == $highest_drink_info['id'])): ?>
+                                    <?php  if (GLOBAL_DISKON_AKTIF && $item['discount_percentage'] > 0 && !($voucher_discount > 0 && $item['id'] == $highest_drink_info['id'])):  ?>
                                         <span class="original-price">Rp <?php echo number_format($item['original_price'], 0, ',', '.'); ?></span>
                                         <span class="final-price">Rp <?php echo number_format($item['final_price'], 0, ',', '.'); ?></span>
                                     <?php else: ?>
                                         <span class="final-price">Rp <?php echo number_format($item['original_price'], 0, ',', '.'); ?></span>
                                     <?php endif; ?>
                                     
-                                    <?php if (!empty(trim($item['discount_name']))): ?>
-                                        <div class="discount-info">Promo: <strong><?php echo htmlspecialchars(trim($item['discount_name'])); ?></strong></div>
-                                    <?php elseif (!empty($item['discount_methods'])): ?>
-                                        <div class="discount-info">Diskon untuk: <strong><?php echo htmlspecialchars(str_replace(['pickup', 'delivery', 'cod'], ['Ambil Ditempat', 'Ongkir', 'COD'], $item['discount_methods'])); ?></strong></div>
-                                    <?php endif; ?>
+                                   <?php if (GLOBAL_DISKON_AKTIF && $item['discount_percentage'] > 0): ?>
+                                    <?php  if (!empty(trim($item['discount_name']))):  ?>
+                                        <div class="discount-info">Promo: <strong> <?php  echo htmlspecialchars(trim($item['discount_name']));  ?> </strong></div>
+                                    <?php  elseif (!empty($item['discount_methods'])):  ?>
+                                        <div class="discount-info">Diskon untuk: <strong> <?php  echo htmlspecialchars(str_replace(['pickup', 'delivery', 'cod'], ['Ambil Ditempat', 'Ongkir', 'COD'], $item['discount_methods']));  ?> </strong></div>
+                                    <?php  endif;  ?>
+                                <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -589,18 +591,20 @@ if ($total_belanja < 0) $total_belanja = 0;
                     <div class="mobile-product-details">
                         <div class="mobile-product-name"><?php echo htmlspecialchars($item['name']); ?></div>
                         <div class="mobile-price-info">
-                            <?php if ($item['discount_percentage'] > 0 && !($voucher_discount > 0 && $item['id'] == $highest_drink_info['id'])): ?>
+                            <?php  if (GLOBAL_DISKON_AKTIF && $item['discount_percentage'] > 0 && !($voucher_discount > 0 && $item['id'] == $highest_drink_info['id'])):  ?>
                                 <div class="original-price">Rp <?php echo number_format($item['original_price'], 0, ',', '.'); ?></div>
                                 <div class="final-price">Rp <?php echo number_format($item['final_price'], 0, ',', '.'); ?></div>
                             <?php else: ?>
                                 <div class="final-price">Rp <?php echo number_format($item['original_price'], 0, ',', '.'); ?></div>
                             <?php endif; ?>
                             
-                            <?php if (!empty(trim($item['discount_name']))): ?>
-                                <div class="discount-info">Promo: <strong><?php echo htmlspecialchars(trim($item['discount_name'])); ?></strong></div>
-                            <?php elseif (!empty($item['discount_methods'])): ?>
-                                <div class="discount-info">Diskon untuk: <strong><?php echo htmlspecialchars(str_replace(['pickup', 'delivery', 'cod'], ['Ambil Ditempat', 'Ongkir', 'COD'], $item['discount_methods'])); ?></strong></div>
-                            <?php endif; ?>
+                           <?php if (GLOBAL_DISKON_AKTIF && $item['discount_percentage'] > 0): ?>
+                            <?php  if (!empty(trim($item['discount_name']))):  ?>
+                                <div class="discount-info">Promo: <strong> <?php  echo htmlspecialchars(trim($item['discount_name']));  ?> </strong></div>
+                            <?php  elseif (!empty($item['discount_methods'])):  ?>
+                                <div class="discount-info">Diskon untuk: <strong> <?php  echo htmlspecialchars(str_replace(['pickup', 'delivery', 'cod'], ['Ambil Ditempat', 'Ongkir', 'COD'], $item['discount_methods']));  ?> </strong></div>
+                            <?php  endif;  ?>
+                        <?php endif; ?>
                         </div>
                     </div>
                 </div>

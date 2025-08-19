@@ -48,7 +48,7 @@ include 'header.php';
                 echo '<div class="product-card">';
 
                 // LOGIKA BARU: Tampilkan badge diskon jika ada
-                if ($row['discount_percentage'] > 0) {
+               if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     echo '<div class="discount-badge">' . $row['discount_percentage'] . '% OFF</div>';
                 }
 
@@ -56,7 +56,7 @@ include 'header.php';
                 echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
                 
                 // LOGIKA BARU: Tampilkan harga diskon
-                if ($row['discount_percentage'] > 0) {
+               if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     $original_price = $row['price'];
                     $discount_amount = ($original_price * $row['discount_percentage']) / 100;
                     $discounted_price = $original_price - $discount_amount;

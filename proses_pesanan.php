@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['cart'])) {
     exit();
 }
 
-$nomor_whatsapp_admin = "NO WHATSAPP ANDA";
+$nomor_whatsapp_admin = "6289669505208";
 $conn->begin_transaction();
 
 try {
@@ -43,7 +43,7 @@ try {
             $manual_discount_amount_per_item = 0;
 
             $is_discount_applicable = false;
-            if ($product['discount_percentage'] > 0 && !empty(trim($product['discount_methods']))) {
+                if (GLOBAL_DISKON_AKTIF && $product['discount_percentage'] > 0 && !empty(trim($product['discount_methods']))) {
                 $allowed_methods = explode(',', $product['discount_methods']);
                 if (in_array($delivery_method, $allowed_methods)) {
                     $is_discount_applicable = true;
@@ -167,7 +167,7 @@ if (!empty($pickup_date_str) && !empty($pickup_time_str)) {
         
         if ($is_item_free_by_voucher) {
             $price_per_item = 0;
-        } elseif ($product['discount_percentage'] > 0) {
+        } elseif (GLOBAL_DISKON_AKTIF && $product['discount_percentage'] > 0) {
             $is_discount_applicable_wa = false;
             if (!empty(trim($product['discount_methods']))) {
                 $allowed_methods_wa = explode(',', $product['discount_methods']);
