@@ -44,7 +44,7 @@ require_once 'config.php';
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 24px 36px;
+        padding: 15px 20px;
         border-bottom: 1px solid #654321;
         box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         position: relative;
@@ -54,18 +54,16 @@ require_once 'config.php';
     .logo a {
         display: flex;
         align-items: center;
-        gap: 18px;
+        gap: 12px;
         text-decoration: none;
         color: white;
-        font-size: 1.7em;
+        font-size: 1.5em;
         font-weight: bold;
         font-family: 'Playfair Display', serif;
     }
 
     .logo img {
         height: 35px;
-        width: auto;
-        transition: height 0.2s;
     }
 
     /* Mobile Menu Toggle */
@@ -751,7 +749,74 @@ require_once 'config.php';
             height: 35px;
         }
     }
+    /* Find Store + Coffee Anim */
+    a.find-store-btn {
+        margin-left: 16px;
+        margin-right: 10px;
+        background: #fff;
+        color: #8B4513;
+        border-radius: 16px;
+        padding: 6px 14px;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 0.95em;
+        box-shadow: 0 2px 8px rgba(139,69,19,0.08);
+        border: 1px solid #fff;
+        transition: background 0.2s, color 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    a.find-store-btn:hover { background: #f6eee6; }
 
+    .header-coffee-anim {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: middle;
+        position: relative;
+        width: 42px;
+        height: 34px;
+        margin-right: 8px;
+    }
+     /* Bee Animation */
+    .bee-anim {
+        animation: beeFly 4.5s linear infinite;
+    }
+    @keyframes beeFly {
+        0% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
+        10% { opacity:1; }
+        20% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
+        35% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
+        45% { opacity:1; transform: translateX(-5px) translateY(-2px) scale(1.1) rotate(5deg); }
+        55% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
+        65% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
+        80% { opacity:1; }
+        90% { opacity:0; }
+        100% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
+    }
+
+    /* Responsive overrides for the find store + anim (header scope) */
+    @media (max-width: 768px) {
+        a.find-store-btn {
+            padding: 5px 12px;
+            font-size: 0.9em;
+            border-radius: 14px;
+            margin-left: 10px;
+        }
+        .header-coffee-anim {
+            width: 32px;
+            height: 26px;
+        }
+    }
+    @media (max-width: 480px) {
+        a.find-store-btn {
+            padding: 4px 10px;
+            font-size: 0.85em;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .header-coffee-anim { display: none; }
+    }
     @media (max-width: 480px) {
         /* Extra Small Mobile */
         .logo a {
@@ -828,93 +893,6 @@ require_once 'config.php';
         </svg>
     </span>
      </a>
-    <style>
-    /* Find Store + Coffee Anim */
-    a.find-store-btn {
-        margin-left: 16px;
-        margin-right: 10px;
-        background: #fff;
-        color: #8B4513;
-        border-radius: 16px;
-        padding: 6px 14px;
-        font-weight: 600;
-        text-decoration: none;
-        font-size: 0.95em;
-        box-shadow: 0 2px 8px rgba(139,69,19,0.08);
-        border: 1px solid #fff;
-        transition: background 0.2s, color 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    a.find-store-btn:hover { background: #f6eee6; }
-
-    .header-coffee-anim {
-        display: inline-flex;
-        align-items: center;
-        vertical-align: middle;
-        position: relative;
-        width: 42px;
-        height: 34px;
-        margin-right: 8px;
-    }
-
-    /* Responsive overrides for the find store + anim (header scope) */
-    @media (max-width: 768px) {
-        a.find-store-btn {
-            padding: 5px 12px;
-            font-size: 0.9em;
-            border-radius: 14px;
-            margin-left: 10px;
-        }
-        .header-coffee-anim {
-            width: 32px;
-            height: 26px;
-        }
-    }
-    @media (max-width: 480px) {
-        a.find-store-btn {
-            padding: 4px 10px;
-            font-size: 0.85em;
-            border-radius: 12px;
-            margin-left: 8px;
-        }
-        .header-coffee-anim { display: none; }
-    }
-
-    .header-coffee-anim svg { display:block; }
-    .coffee-steam-header path {
-        opacity: 0.7;
-        stroke-dasharray: 32;
-        stroke-dashoffset: 0;
-        animation: steamUpHeader 2.2s infinite ease-in-out;
-    }
-    .coffee-steam-header path:nth-child(2) {
-        animation-delay: 1.1s;
-        opacity: 0.5;
-    }
-    @keyframes steamUpHeader {
-        0% { opacity: 0.7; stroke-dashoffset: 32; transform: translateY(0); }
-        60% { opacity: 1; stroke-dashoffset: 0; transform: translateY(-5px); }
-        100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-14px); }
-    }
-    /* Bee Animation */
-    .bee-anim {
-        animation: beeFly 4.5s linear infinite;
-    }
-    @keyframes beeFly {
-        0% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
-        10% { opacity:1; }
-        20% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
-        35% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
-        45% { opacity:1; transform: translateX(-5px) translateY(-2px) scale(1.1) rotate(5deg); }
-        55% { opacity:1; transform: translateX(0px) translateY(0) scale(1.1) rotate(0deg); }
-        65% { opacity:1; transform: translateX(20px) translateY(0) scale(1) rotate(-5deg); }
-        80% { opacity:1; }
-        90% { opacity:0; }
-        100% { opacity:0; transform: translateX(60px) translateY(-10px) scale(0.7) rotate(-10deg); }
-    }
-    </style>
     <button class="mobile-menu-toggle"><i class="fas fa-bars"></i></button>
     <nav>
         <ul>
