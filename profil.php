@@ -23,7 +23,16 @@ unset($_SESSION['message'], $_SESSION['error']);
 
 
 // Ambil Riwayat Pembelian Pengguna
-$history_stmt = $conn->prepare("SELECT id, order_date, total_price, status FROM orders WHERE user_id = ? ORDER BY order_date DESC");
+$history_stmt = $conn->prepare("
+    SELECT 
+        o.id as order_id, o.order_date, o.total_price, o.status,
+        oi.id as order_item_id, oi.product_id, p.name as product_name
+    FROM orders o
+    JOIN order_items oi ON o.id = oi.order_id
+    JOIN products p ON oi.product_id = p.id
+    WHERE o.user_id = ? AND o.status IN ('paid', 'free')
+    ORDER BY o.order_date DESC
+");
 $history_stmt->bind_param("i", $user_id);
 $history_stmt->execute();
 $purchase_history = $history_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -49,6 +58,14 @@ $purchase_history = $history_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     .status-pending { background-color: #f39c12; }
     .status-paid { background-color: #28a745; }
     .status-free { background-color: #6c757d; } /* Tambahan Warna Abu-abu */
+    .order-header { background-color: #f8f9fa; font-weight: bold; }
+    .order-items-cell { padding: 15px 25px !important; }
+    .order-items-cell ul { list-style: none; padding-left: 0; margin: 0; }
+    .order-items-cell li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .order-items-cell li:last-child { border-bottom: none; }
+    .btn-review { background-color: #007bff; color: white; padding: 5px 12px; font-size: 12px; border-radius: 5px; text-decoration: none; transition: background-color 0.3s; }
+    .btn-review:hover { background-color: #0056b3; }
+    .review-given { font-size: 12px; color: #28a745; font-style: italic; }
 </style>
 
 <div class="profile-container">
@@ -108,34 +125,60 @@ $purchase_history = $history_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($purchase_history as $order): ?>
-                        <tr>
-                            <td>#<?php echo $order['id']; ?></td>
-                            <td><?php echo date('d M Y', strtotime($order['order_date'])); ?></td>
-                            <td>Rp <?php echo number_format($order['total_price'], 0, ',', '.'); ?></td>
-                            <td>
-                                <?php
-                                    // PERBAIKAN LOGIKA WARNA STATUS
-                                    $status_class = '';
-                                    switch ($order['status']) {
-                                        case 'paid':
-                                            $status_class = 'status-paid';
-                                            break;
-                                        case 'free':
-                                            $status_class = 'status-free';
-                                            break;
-                                        default: // pending
-                                            $status_class = 'status-pending';
-                                            break;
-                                    }
-                                ?>
-                                <span class="status-badge <?php echo $status_class; ?>">
-                                    <?php echo htmlspecialchars($order['status']); ?>
-                                </span>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
+    <?php
+    $current_order_id = null;
+    foreach ($purchase_history as $order):
+        if ($current_order_id !== $order['order_id']) {
+            if ($current_order_id !== null) {
+                echo '</tr>'; // Tutup row sebelumnya
+            }
+            $current_order_id = $order['order_id'];
+    ?>
+    <tr class="order-header">
+        <td>#<?php echo $order['order_id']; ?></td>
+        <td><?php echo date('d M Y', strtotime($order['order_date'])); ?></td>
+        <td>Rp <?php echo number_format($order['total_price'], 0, ',', '.'); ?></td>
+        <td>
+            <?php
+            $status_class = 'status-pending';
+            if ($order['status'] == 'paid') $status_class = 'status-paid';
+            if ($order['status'] == 'free') $status_class = 'status-free';
+            ?>
+            <span class="status-badge <?php echo $status_class; ?>">
+                <?php echo htmlspecialchars($order['status']); ?>
+            </span>
+        </td>
+    </tr>
+    <tr class="order-items-row">
+        <td colspan="4" class="order-items-cell">
+            <strong>Produk yang dibeli:</strong>
+            <ul>
+    <?php
+        }
+    ?>
+                <li>
+                    <?php echo htmlspecialchars($order['product_name']); ?>
+                    <?php
+                    // Cek apakah sudah ada review untuk item ini
+                    $check_review_stmt = $conn->prepare("SELECT id FROM reviews WHERE user_id = ? AND product_id = ? AND order_id = ?");
+                    $check_review_stmt->bind_param("iii", $user_id, $order['product_id'], $order['order_id']);
+                    $check_review_stmt->execute();
+                    $review_exists = $check_review_stmt->get_result()->num_rows > 0;
+                    
+                    if ($review_exists) {
+                        echo '<span class="review-given">- <i class="fas fa-check-circle"></i> Ulasan diberikan</span>';
+                    } else {
+                        echo '<a href="beri_ulasan.php?product_id='.$order['product_id'].'&order_id='.$order['order_id'].'" class="btn-review">Beri Ulasan</a>';
+                    }
+                    ?>
+                </li>
+    <?php
+    endforeach;
+    if ($current_order_id !== null) {
+        echo '</ul></td></tr>'; // Tutup item list dan row terakhir
+    }
+    ?>
+</tbody>
             </table>
         <?php else: ?>
             <p>Anda belum memiliki riwayat pembelian.</p>

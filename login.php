@@ -30,9 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($password, $hashed_password)) {
                 $_SESSION['user_id'] = $id;
                 $_SESSION['username'] = $username;
-                header("Location: index.php");
+
+                // Cek apakah ada parameter redirect
+                if (isset($_GET['redirect']) && $_GET['redirect'] == 'keranjang') {
+                    header("Location: keranjang.php");
+                } else {
+                    header("Location: index.php");
+                }
                 exit();
             } else {
+            //...
                 $error = "Password salah.";
             }
         } else {

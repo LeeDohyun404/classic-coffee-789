@@ -41,6 +41,13 @@ $items->data_seek(0); // reset pointer lagi untuk loop tabel
 // Hitung subtotal asli sebelum diskon
 $subtotal_price = $order['total_price'] + $order['voucher_discount'];
 ?>
+<?php
+// ================== TAMBAHAN BARU: DETEKSI PRE-ORDER ==================
+$is_pre_order = ($order && $order['total_price'] == 0.00);
+// Untuk lebih akurat, Anda bisa melakukan pengecekan ke kategori produk seperti yang saya sarankan sebelumnya,
+// namun pengecekan harga 0 sudah cukup kuat untuk sistem ini.
+// ================== AKHIR TAMBAHAN ==================
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -57,12 +64,12 @@ $subtotal_price = $order['total_price'] + $order['voucher_discount'];
     <main style="padding: 40px; text-align: center;">
         <div style="border: 1px solid #ddd; padding: 30px; max-width: 600px; margin: auto; background: #fafafa; border-radius: 10px;">
             
-            <h2>🛒 Pesanan Telah Diterima!</h2>
-            <p>Terima kasih, <?php echo htmlspecialchars($order['customer_name']); ?>. Berikut adalah rincian pesanan Anda.</p>
+           <h2> 🛒 <?php echo $is_pre_order ? 'Pre-Order Telah Diterima!' : 'Pesanan Telah Diterima!'; ?></h2>
+            <p>Terima kasih, <?php echo htmlspecialchars($order['customer_name']); ?>. <?php echo $is_pre_order ? 'Admin kami akan segera menghubungi Anda melalui WhatsApp untuk konfirmasi harga, ketersediaan, dan detail pembayaran.' : 'Berikut adalah rincian pesanan Anda.'; ?></p>
 
             <?php if (!empty($order['whatsapp_url'])): ?>
                 <a href="<?php echo htmlspecialchars($order['whatsapp_url']); ?>" target="_blank" class="btn" style="display:inline-block; margin-top: 20px; margin-bottom: 20px; width: auto; padding: 15px 30px; background: #25D366; text-decoration:none; color:white; border-radius:8px; font-size: 1.2em;">
-                    <i class="fab fa-whatsapp"></i> Lanjutkan ke WhatsApp
+                    <i class="fab fa-whatsapp"></i> <?php echo $is_pre_order ? 'Konfirmasi Pre-Order via WhatsApp' : 'Lanjutkan ke WhatsApp'; ?>
                 </a>
             <?php endif; ?>
             
@@ -82,22 +89,28 @@ $subtotal_price = $order['total_price'] + $order['voucher_discount'];
             <h3 style="color: #5a3a22;">Rincian Pesanan Anda</h3>
             
             <table style="width: 100%; text-align: left; border-collapse: collapse; margin-top: 10px;">
+                <table style="width: 100%; ...">
                 <thead>
                     <tr style="background-color: #f1f1f1;">
                         <th style="padding: 10px;">Produk</th>
                         <th style="padding: 10px; text-align:center;">Jumlah</th>
                         <th style="padding: 10px; text-align:right;">Subtotal</th>
+                         <?php if (!$is_pre_order): ?>
+                <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($item = $items->fetch_assoc()): ?>
+                     <?php while($item = $items->fetch_assoc()): ?>
                     <tr style="border-bottom: 1px solid #eee;">
                         <td style="padding: 10px;"><?php echo htmlspecialchars($item['product_name']); ?></td>
                         <td style="padding: 10px; text-align:center;"><?php echo $item['quantity']; ?></td>
+                        <?php if (!$is_pre_order): ?>
                         <td style="padding: 10px; text-align:right;">Rp <?php echo number_format($item['price_per_item'] * $item['quantity'], 0, ',', '.'); ?></td>
+                        <?php endif; ?>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
+                 <?php if (!$is_pre_order): ?>
                 <tfoot>
                     <tr>
                         <td colspan="2" style="padding: 10px; text-align:right;">Subtotal Harga</td>
@@ -114,6 +127,7 @@ $subtotal_price = $order['total_price'] + $order['voucher_discount'];
                         <td style="padding: 12px; text-align:right;">Rp <?php echo number_format($order['total_price'], 0, ',', '.'); ?></td>
                     </tr>
                 </tfoot>
+                <?php endif; ?>
             </table>
             <a href="index.php" class="btn" style="display:inline-block; margin-top: 30px; width: auto; padding: 10px 30px; background: #5a3a22; text-decoration:none; color:white; border-radius:8px;">Kembali ke Beranda</a>
             </div>

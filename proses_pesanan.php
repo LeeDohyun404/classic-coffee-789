@@ -35,6 +35,15 @@ try {
         while ($row = $result_products->fetch_assoc()) {
             $products_from_db[$row['id']] = $row;
         }
+        // ================== TAMBAHAN BARU: DETEKSI PRE-ORDER ==================
+$is_pre_order_cart = false;
+foreach ($cart as $product_id => $quantity) {
+    if (isset($products_from_db[$product_id]) && $products_from_db[$product_id]['category'] === 'pre-order') {
+        $is_pre_order_cart = true;
+        break;
+    }
+}
+// ================== AKHIR TAMBAHAN ==================
 
         foreach ($cart as $product_id => $quantity) {
             $product = $products_from_db[$product_id];
@@ -93,6 +102,13 @@ try {
     $total_setelah_diskon_produk = $subtotal_produk - $total_diskon_produk;
     $final_total = $total_setelah_diskon_produk - $voucher_discount;
     if ($final_total < 0) $final_total = 0;
+    // ================== TAMBAHAN BARU: PAKSA HARGA JADI 0 JIKA PRE-ORDER ==================
+if ($is_pre_order_cart) {
+    $final_total = 0.00;
+    $voucher_discount = 0; // Abaikan voucher
+    $total_diskon_produk = 0; // Abaikan diskon produk
+}
+// ================== AKHIR TAMBAHAN ==================
 
     // 4. Ambil Sisa Data dari Form
     $shipping_fee = 0;
@@ -158,16 +174,35 @@ if (!empty($pickup_date_str) && !empty($pickup_time_str)) {
     }
 
     // 6. Format Pesan WhatsApp
-    $pesan_wa_items = "";
+   // ================== MODIFIKASI TOTAL: PEMBUATAN PESAN WHATSAPP ==================
+// ================== PERBAIKAN TOTAL: 6. Format Pesan WhatsApp ==================
+$pesan_wa_items = "";
+foreach ($cart as $product_id => $quantity) {
+    $product = $products_from_db[$product_id];
+    $pesan_wa_items .= "-> " . htmlspecialchars($product['name']) . "\n";
+    $pesan_wa_items .= "   Qty: " . $quantity . "\n";
+}
+
+// Variabel $is_pre_order_cart sudah kita definisikan di atas, kita gunakan di sini.
+if ($is_pre_order_cart) {
+    // --- FORMAT PESAN KHUSUS UNTUK PRE-ORDER ---
+    $pesan_whatsapp = "Halo Classic Coffee 789, ada permintaan PRE-ORDER baru:\n\n";
+    $pesan_whatsapp .= "*DETAIL PRODUK PRE-ORDER:*\n";
+    $pesan_whatsapp .= $pesan_wa_items;
+    $pesan_whatsapp .= "\n*Total Pesanan: Mohon dikonfirmasi oleh admin.*\n";
+
+} else {
+    // --- FORMAT PESAN NORMAL (YANG SUDAH ADA SEBELUMNYA) ---
+    $pesan_whatsapp = "Halo Classic Coffee 789, ada pesanan baru:\n\n";
+
+    // Looping ulang untuk menambahkan harga pada pesanan normal
+    $pesan_wa_items_dengan_harga = "";
     foreach ($cart as $product_id => $quantity) {
         $product = $products_from_db[$product_id];
-        $price_per_item = $product['price'];
-        
-        $is_item_free_by_voucher = ($voucher_used && $product_id == $highest_drink_info['id']);
-        
-        if ($is_item_free_by_voucher) {
-            $price_per_item = 0;
-        } elseif (GLOBAL_DISKON_AKTIF && $product['discount_percentage'] > 0) {
+        $price_per_item = $product['price']; // Harga asli
+
+        // Cek diskon yang berlaku untuk item ini
+        if (GLOBAL_DISKON_AKTIF && $product['discount_percentage'] > 0) {
             $is_discount_applicable_wa = false;
             if (!empty(trim($product['discount_methods']))) {
                 $allowed_methods_wa = explode(',', $product['discount_methods']);
@@ -179,40 +214,45 @@ if (!empty($pickup_date_str) && !empty($pickup_time_str)) {
                 $price_per_item -= ($price_per_item * $product['discount_percentage'] / 100);
             }
         }
-        
-        $item_total_price = $price_per_item * $quantity;
-        $pesan_wa_items .= "-> " . htmlspecialchars($product['name']) . "\n";
-        $pesan_wa_items .= "   Qty: " . $quantity . " x Rp " . number_format($price_per_item, 0, ',', '.') . " = Rp " . number_format($item_total_price, 0, ',', '.') . "\n";
-    }
 
-    $pesan_whatsapp = "Halo Classic Coffee 789, ada pesanan baru:\n\n";
-    $pesan_whatsapp .= $pesan_wa_items;
+        $item_total_price = $price_per_item * $quantity;
+        $pesan_wa_items_dengan_harga .= "-> " . htmlspecialchars($product['name']) . "\n";
+        $pesan_wa_items_dengan_harga .= "   Qty: " . $quantity . " x Rp " . number_format($price_per_item, 0, ',', '.') . " = Rp " . number_format($item_total_price, 0, ',', '.') . "\n";
+    }
+    $pesan_whatsapp .= $pesan_wa_items_dengan_harga;
+
+    // Rincian harga
     $pesan_whatsapp .= "\nSubtotal Asli: Rp " . number_format($subtotal_produk, 0, ',', '.');
-    if($total_diskon_produk > 0) {
+    if ($total_diskon_produk > 0) {
         $pesan_whatsapp .= "\nTotal Diskon Produk: -Rp " . number_format($total_diskon_produk, 0, ',', '.');
     }
     if ($voucher_used) {
         $pesan_whatsapp .= "\nVoucher Gratis: -Rp " . number_format($voucher_discount, 0, ',', '.');
     }
-    $pesan_whatsapp .= "\n*Total Akhir: Rp " . number_format($final_total, 0, ',', '.') . "*\n\n";
-    
-    $pesan_whatsapp .= "Berikut data pelanggan:\n";
-    $pesan_whatsapp .= "Nama: " . htmlspecialchars($customer_name) . "\nNo. HP: " . htmlspecialchars($customer_phone) . "\n\n";
-    if (!empty(trim($order_notes))) { $pesan_whatsapp .= "*Catatan Pesanan:*\n" . htmlspecialchars($order_notes) . "\n\n"; }
-    
-    // Info Pengambilan & Pembayaran
-    $pesan_whatsapp .= "*Jadwal:*\n" . htmlspecialchars($pickup_datetime_formatted) . "\n";
-    if ($delivery_method === 'pickup') { $pesan_whatsapp .= "Metode: *Ambil Ditempat*\n"; }
-    elseif ($delivery_method === 'delivery') { $pesan_whatsapp .= "Metode: *Ongkir*\nAlamat Pengiriman:\n" . htmlspecialchars($address) ."\n"; }
-    elseif ($delivery_method === 'cod') { $pesan_whatsapp .= "Metode: *COD*\nLokasi COD:\n" . htmlspecialchars($address) . "\n"; }
-    
-    if ($payment_choice === 'qris') {
-        $pesan_whatsapp .= "Pembayaran: *QRIS*\n_(Mohon kirim bukti transfer)_";
-    } else {
-        $pesan_whatsapp .= "Pembayaran: *CASH (Bayar di Tempat)*";
-    }
+    $pesan_whatsapp .= "\n*Total Akhir: Rp " . number_format($final_total, 0, ',', '.') . "*\n";
+}
 
-    $pesan_whatsapp .= "\n\nMohon konfirmasinya. Terima kasih.\n(Ref Order ID: " . $order_id . ")";
+$pesan_whatsapp .= "\nBerikut data pelanggan:\n";
+$pesan_whatsapp .= "Nama: " . htmlspecialchars($customer_name) . "\nNo. HP: " . htmlspecialchars($customer_phone) . "\n\n";
+if (!empty(trim($order_notes))) { $pesan_whatsapp .= "*Catatan Pesanan:*\n" . htmlspecialchars($order_notes) . "\n\n"; }
+
+// Info Pengambilan & Pembayaran
+$pesan_whatsapp .= "*Jadwal:*\n" . htmlspecialchars($pickup_datetime_formatted) . "\n";
+if ($delivery_method === 'pickup') { $pesan_whatsapp .= "Metode: *Ambil Ditempat*\n"; }
+elseif ($delivery_method === 'delivery') { $pesan_whatsapp .= "Metode: *Ongkir*\nAlamat Pengiriman:\n" . htmlspecialchars($address) ."\n"; }
+elseif ($delivery_method === 'cod') { $pesan_whatsapp .= "Metode: *COD*\nLokasi COD:\n" . htmlspecialchars($address) . "\n"; }
+
+// Bagian pembayaran juga perlu disesuaikan
+if ($is_pre_order_cart) {
+    $pesan_whatsapp .= "Pembayaran: *Akan Dikonfirmasi Admin*";
+} elseif ($payment_choice === 'qris') {
+    $pesan_whatsapp .= "Pembayaran: *QRIS*\n_(Mohon kirim bukti transfer)_";
+} else {
+    $pesan_whatsapp .= "Pembayaran: *CASH (Bayar di Tempat)*";
+}
+
+$pesan_whatsapp .= "\n\nMohon konfirmasinya. Terima kasih.\n(Ref Order ID: " . $order_id . ")";
+// ================== AKHIR BLOK PENGGANTI ==================
     
     $encoded_message = urlencode($pesan_whatsapp);
     $whatsapp_url = "https://api.whatsapp.com/send?phone=" . $nomor_whatsapp_admin . "&text=" . $encoded_message;

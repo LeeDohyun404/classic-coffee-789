@@ -47,9 +47,10 @@ $stmt_items->bind_param("i", $order_id);
 $stmt_items->execute();
 $items = $stmt_items->get_result();
 
-// --- PERUBAHAN DI SINI ---
-// Ambil HANYA produk yang relevan untuk pilihan di dropdown
-$active_products_query = "SELECT id, name FROM products WHERE name LIKE 'Paket%' OR name LIKE '%Burger%' OR name IN ('Dimsum', 'Spaghetti Bolognese', 'Mango Sticky Rice', 'Sakura Latte (Ralat)', 'Lychee Latte (Lyla)', 'Caramel Latte (Carla)', 'Kopi Susu Original', 'Kopi Susu Gula Aren', 'Hazelnut Latte (Ella)', 'Milk Base Mangga', 'Milk Base Red Velvet', 'Thai Tea Original', 'Thai Tea Lychee', 'Thai Tea Milk', 'Thai Tea Lemon') ORDER BY name ASC";
+// GANTI BARIS QUERY LAMA DENGAN INI:
+
+// Ambil SEMUA produk yang aktif (bukan yang diarsip) untuk pilihan dropdown
+$active_products_query = "SELECT id, name FROM products WHERE category != 'arsip' ORDER BY name ASC";
 $all_products_result = $conn->query($active_products_query);
 $all_products = [];
 while ($prod_row = $all_products_result->fetch_assoc()) {

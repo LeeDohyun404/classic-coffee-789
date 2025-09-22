@@ -137,6 +137,17 @@ if ($slides_result && $slides_result->num_rows > 0) {
         .slide-text h1 { font-size: 2em; }
         .slide-text p { font-size: 1.1em; }
     }
+    .product-rating .fas.fa-star {
+    color: #d1d1d1; /* Warna bintang default (abu-abu) */
+    }
+    .product-rating .fas.fa-star.rated {
+        color: #ffc107; /* Warna bintang yang sudah dirating (kuning) */
+    }
+    /* CSS untuk link produk */
+    a.product-link {
+        text-decoration: none;
+        color: inherit; /* Mewarisi warna dari parent, jadi judul tetap coklat */
+    }
 </style>
 
 <div class="home-container">
@@ -167,17 +178,39 @@ if ($slides_result && $slides_result->num_rows > 0) {
         <h2>Produk Unggulan Kami</h2>
         <div class="product-grid">
             <?php
-            $result_unggulan = $conn->query("SELECT * FROM products ORDER BY RAND() LIMIT 3");
+            // Kueri SQL yang diperbaiki: Menggunakan `review_count`
+            $result_unggulan = $conn->query("SELECT * FROM products WHERE review_count > 0 ORDER BY average_rating DESC, review_count DESC LIMIT 3");
             
             if ($result_unggulan && $result_unggulan->num_rows > 0) {
                 while($row = $result_unggulan->fetch_assoc()) {
                     echo '<div class="product-card">';
-                   if (GLOBAL_DISKON_AKTIF && !empty($row['discount_percentage']) && $row['discount_percentage'] > 0) {
+                    
+                    if (GLOBAL_DISKON_AKTIF && !empty($row['discount_percentage']) && $row['discount_percentage'] > 0) {
                         echo '<div class="discount-badge">' . $row['discount_percentage'] . '% OFF</div>';
                     }
-                    echo '  <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                    
+                    echo '  <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                    echo '      <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                    echo '  </a>';
+                    
                     echo '  <div class="card-content">';
-                    echo '      <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                    echo '      <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                    echo '          <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                    echo '      </a>';
+                    
+                    // KODE UNTUK MENAMPILKAN BINTANG (sudah diperbaiki)
+                    if ($row['review_count'] > 0) {
+                        echo '<div class="product-rating">';
+                        $rating = round($row['average_rating']); 
+                        for ($i = 1; $i <= 5; $i++) {
+                            echo '<i class="fas fa-star ' . ($i <= $rating ? 'rated' : '') . '"></i>';
+                        }
+                        echo ' <span>(' . $row['review_count'] . ' ulasan)</span>';
+                        echo '</div>';
+                    } else {
+                        echo '<div class="product-rating"><span>Belum ada ulasan</span></div>';
+                    }
+                                        
                     if (!empty($row['discount_percentage']) && $row['discount_percentage'] > 0) {
                         $original_price = $row['price'];
                         $discounted_price = $original_price - (($original_price * $row['discount_percentage']) / 100);
@@ -189,6 +222,7 @@ if ($slides_result && $slides_result->num_rows > 0) {
                         echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
                     }
                     echo '  </div>';
+                    
                     echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
                     echo '      <div class="quantity-container">';
                     echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';
@@ -198,6 +232,7 @@ if ($slides_result && $slides_result->num_rows > 0) {
                     echo '      <input type="hidden" name="product_id" value="' . $row['id'] . '">';
                     echo '      <button type="submit" class="btn-buy">Tambah ke Keranjang</button>';
                     echo '  </form>';
+                    
                     echo '</div>';
                 }
             } else {

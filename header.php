@@ -852,7 +852,13 @@ require_once 'config.php';
         .cart-table .hide-mobile {
             display: none;
         }
-    }
+            /* Styling untuk Bintang Rating */
+        .product-rating {
+            padding: 0 15px 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        }
 </style>
 <header>
     <div class="logo">
@@ -899,10 +905,12 @@ require_once 'config.php';
             <li><a href="<?php echo BASE_URL; ?>/index.php">Beranda</a></li>
             <li class="dropdown-li">
                 <a href="#">Produk <i class="fas fa-caret-down"></i></a>
-                <ul class="dropdown-menu">
-                    <li><a href="<?php echo BASE_URL; ?>/pilihan_paket.php">Paket</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>/makanan.php">Makanan</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>/pilihan_minuman.php">Minuman</a></li>
+
+                 <ul class="dropdown-menu">
+                <li><a href="<?php echo BASE_URL; ?>/pilihan_paket.php">Paket</a></li>
+                <li><a href="<?php echo BASE_URL; ?>/makanan.php">Makanan</a></li>
+                <li><a href="<?php echo BASE_URL; ?>/pilihan_minuman.php">Minuman</a></li>
+                <li><a href="<?php echo BASE_URL; ?>/preorder.php">Produk Pre-Order</a></li>
                 </ul>
             </li>
             <li><a href="<?php echo BASE_URL; ?>/keranjang.php">Keranjang (<?php echo count($_SESSION['cart'] ?? []); ?>)</a></li>

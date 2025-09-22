@@ -7,6 +7,8 @@ include 'header.php';
     .product-card {
         position: relative; /* Diperlukan untuk posisi badge */
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
     }
     .discount-badge {
         position: absolute;
@@ -36,6 +38,17 @@ include 'header.php';
         font-weight: bold;
         font-size: 1.3em;
     }
+    .product-rating .fas.fa-star {
+        color: #d1d1d1; /* Warna bintang default (abu-abu) */
+    }
+    .product-rating .fas.fa-star.rated {
+        color: #ffc107; /* Warna bintang yang sudah dirating (kuning) */
+    }
+    /* CSS untuk link produk */
+    a.product-link {
+        text-decoration: none;
+        color: inherit; /* Mewarisi warna dari parent, jadi judul tetap coklat */
+    }
 </style>
 <div class="menu-page-container">
     <h1>Menu Makanan</h1>
@@ -46,17 +59,31 @@ include 'header.php';
         if ($result && $result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
                 echo '<div class="product-card">';
-
-                // LOGIKA BARU: Tampilkan badge diskon jika ada
-               if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
+                if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     echo '<div class="discount-badge">' . $row['discount_percentage'] . '% OFF</div>';
                 }
+                echo '  <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                echo '      <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                echo '  </a>';
+                echo '  <div class="card-content">';
+                echo '      <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                echo '          <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                echo '      </a>';
 
-                echo '  <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
-                echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                // TAMPILAN RATING DAN ULASAN
+                if ($row['review_count'] > 0) {
+                    echo '<div class="product-rating">';
+                    $rating = round($row['average_rating']);
+                    for ($i = 1; $i <= 5; $i++) {
+                        echo '<i class="fas fa-star ' . ($i <= $rating ? 'rated' : '') . '"></i>';
+                    }
+                    echo ' <span>(' . $row['review_count'] . ' ulasan)</span>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="product-rating"><span>Belum ada ulasan</span></div>';
+                }
                 
-                // LOGIKA BARU: Tampilkan harga diskon
-               if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
+                if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     $original_price = $row['price'];
                     $discount_amount = ($original_price * $row['discount_percentage']) / 100;
                     $discounted_price = $original_price - $discount_amount;
@@ -69,6 +96,7 @@ include 'header.php';
                     echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
                 }
 
+                echo '  </div>';
                 echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
                 echo '      <div class="quantity-container">';
                 echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';
@@ -87,4 +115,3 @@ include 'header.php';
     </div>
 </div>
 <?php include 'footer.php'; ?>
-

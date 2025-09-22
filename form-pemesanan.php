@@ -1,5 +1,13 @@
 <?php
 require_once 'config.php';
+// TAMBAHKAN BLOK KODE INI
+// Cek apakah pengguna sudah login. Jika belum, tendang ke halaman login.
+if (!isset($_SESSION['user_id'])) {
+    // Redirect ke halaman login dan beritahu dari mana pengguna datang
+    header('Location: login.php?redirect=keranjang');
+    exit();
+}
+// AKHIR BLOK KODE TAMBAHAN
 $is_logged_in = isset($_SESSION['user_id']);
 $user_data = null;
 if ($is_logged_in) {
@@ -68,10 +76,6 @@ if ($is_logged_in) {
         <div class="form-container">
             <h1>Formulir Pemesanan</h1>
             <form action="proses_pesanan.php" method="POST">
-
-                <?php if (!$is_logged_in): ?>
-                    <div class="form-group"><label for="customer_name">Nama Lengkap</label><input type="text" name="customer_name" id="customer_name" required></div>
-                <?php endif; ?>
                 <div class="form-group"><label for="customer_phone">No. HP (WhatsApp)</label><input type="tel" name="customer_phone" id="customer_phone"></div>
                 <div class="form-group"><label for="guest_email">Email (Opsional)</label><input type="email" name="guest_email" id="guest_email"></div>
 

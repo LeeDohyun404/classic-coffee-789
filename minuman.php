@@ -8,11 +8,56 @@ $page_title = ($kategori == 'kopi') ? 'Coffee' : 'Non-Coffee';
 <title>Menu Minuman <?php echo $page_title; ?> - Classic Coffee 789</title>
 <style>
     /* Tambahan CSS untuk Tampilan Diskon */
-    .product-card { position: relative; overflow: hidden; }
-    .discount-badge { position: absolute; top: 15px; right: -30px; background-color: #e74c3c; color: white; padding: 5px 30px; font-weight: bold; transform: rotate(45deg); font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-    .price-container { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .original-price { text-decoration: line-through; color: #999; font-size: 1em; }
-    .discounted-price { color: #e74c3c; font-weight: bold; font-size: 1.3em; }
+    .product-card { 
+        position: relative; 
+        overflow: hidden; 
+        display: flex;
+        flex-direction: column;
+    }
+    .discount-badge { 
+        position: absolute; 
+        top: 15px; 
+        right: -30px; 
+        background-color: #e74c3c; 
+        color: white; 
+        padding: 5px 30px; 
+        font-weight: bold; 
+        transform: rotate(45deg); 
+        font-size: 14px; 
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+    }
+    .price-container { 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        flex-wrap: wrap; 
+    }
+    .original-price { 
+        text-decoration: line-through; 
+        color: #999; 
+        font-size: 1em; 
+    }
+    .discounted-price { 
+        color: #e74c3c; 
+        font-weight: bold; 
+        font-size: 1.3em; 
+    }
+    /* CSS untuk link produk */
+    a.product-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .product-rating {
+        margin-top: 5px;
+        color: #d1d1d1;
+        font-size: 0.9em;
+    }
+    .product-rating .fas.fa-star {
+        color: #d1d1d1; 
+    }
+    .product-rating .fas.fa-star.rated {
+        color: #ffc107; 
+    }
 </style>
 
 <div class="menu-page-container">
@@ -31,9 +76,27 @@ $page_title = ($kategori == 'kopi') ? 'Coffee' : 'Non-Coffee';
                 if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     echo '<div class="discount-badge">' . $row['discount_percentage'] . '% OFF</div>';
                 }
+                echo '  <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                echo '      <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
+                echo '  </a>';
 
-                echo '  <img src="images/' . htmlspecialchars($row['image_url']) . '" alt="' . htmlspecialchars($row['name']) . '">';
-                echo '  <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                echo '  <div class="card-content">';
+                echo '      <a href="detail_produk.php?id=' . $row['id'] . '" class="product-link">';
+                echo '          <h4>' . htmlspecialchars($row['name']) . '</h4>';
+                echo '      </a>';
+
+                // TAMPILAN RATING DAN ULASAN (sudah diperbaiki)
+                if ($row['review_count'] > 0) {
+                    echo '<div class="product-rating">';
+                    $rating = round($row['average_rating']);
+                    for ($i = 1; $i <= 5; $i++) {
+                        echo '<i class="fas fa-star ' . ($i <= $rating ? 'rated' : '') . '"></i>';
+                    }
+                    echo ' <span>(' . $row['review_count'] . ' ulasan)</span>';
+                    echo '</div>';
+                } else {
+                    echo '<div class="product-rating"><span>Belum ada ulasan</span></div>';
+                }
                 
                 if (GLOBAL_DISKON_AKTIF && $row['discount_percentage'] > 0) {
                     $original_price = $row['price'];
@@ -48,6 +111,7 @@ $page_title = ($kategori == 'kopi') ? 'Coffee' : 'Non-Coffee';
                     echo '  <p class="price">Rp ' . number_format($row['price'], 0, ',', '.') . '</p>';
                 }
 
+                echo '  </div>'; // Penutup div card-content
                 echo '  <form action="tambah_keranjang.php" method="POST" class="add-to-cart-form">';
                 echo '      <div class="quantity-container">';
                 echo '          <button type="button" class="quantity-btn" onclick="changeQuantity(this, -1)">-</button>';

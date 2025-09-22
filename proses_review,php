@@ -1,0 +1,47 @@
+<?php
+// proses_review.php
+require_once 'config.php';
+
+// Periksa apakah formulir telah dikirim
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
+    $productId = (int)$_POST['product_id'];
+    $rating = (int)$_POST['rating'];
+    $reviewText = $_POST['review_text'] ?? '';
+    $userId = $_SESSION['user_id'] ?? null;
+
+    // Validasi input
+    if ($rating < 1 || $rating > 5) {
+        die("Peringkat tidak valid.");
+    }
+
+    $conn->begin_transaction();
+    try {
+        // Masukkan ulasan baru
+        $stmt_insert = $conn->prepare("INSERT INTO reviews (product_id, user_id, rating, review_text) VALUES (?, ?, ?, ?)");
+        $stmt_insert->bind_param("iiss", $productId, $userId, $rating, $reviewText);
+        $stmt_insert->execute();
+
+        // Hitung rata-rata peringkat baru dan jumlah ulasan
+        $stmt_avg = $conn->prepare("SELECT AVG(rating) AS avg_rating, COUNT(id) AS review_count FROM reviews WHERE product_id = ?");
+        $stmt_avg->bind_param("i", $productId);
+        $stmt_avg->execute();
+        $result_avg = $stmt_avg->get_result()->fetch_assoc();
+        
+        $new_avg = $result_avg['avg_rating'];
+        $new_count = $result_avg['review_count'];
+
+        // Perbarui tabel produk
+        $stmt_update = $conn->prepare("UPDATE products SET average_rating = ?, review_count = ? WHERE id = ?");
+        $stmt_update->bind_param("dii", $new_avg, $new_count, $productId);
+        $stmt_update->execute();
+
+        $conn->commit();
+
+        header("Location: product_detail.php?id=" . $productId); // Arahkan ke halaman produk
+        exit();
+    } catch (Exception $e) {
+        $conn->rollback();
+        die("Terjadi kesalahan saat mengirim ulasan: " . $e->getMessage());
+    }
+}
+?>

@@ -20,10 +20,18 @@ $error = '';
 
 // --- PROSES TAMBAH/UPDATE PRODUK ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $category = $_POST['category'];
-    $discount_percentage = (int)($_POST['discount_percentage'] ?? 0);
+   // GANTI BLOK DI ATAS DENGAN INI:
+
+$name = $_POST['name'];
+$category = $_POST['category'];
+
+// ================== PERBAIKAN LOGIKA HARGA ==================
+// Jika kategori adalah 'pre-order', paksa harga menjadi 0.
+// Jika tidak, ambil harga dari form. Gunakan '?? 0' sebagai pengaman jika harga kosong.
+$price = ($_POST['category'] === 'pre-order') ? 0 : ($_POST['price'] ?? 0);
+// ================== AKHIR PERBAIKAN ==================
+
+$discount_percentage = (int)($_POST['discount_percentage'] ?? 0);
     $product_id = !empty($_POST['product_id']) ? $_POST['product_id'] : null;
     $image_url = $_POST['current_image'] ?? '';
 
@@ -82,27 +90,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // --- PROSES HAPUS ---
+// ================== KODE DIAGNOSTIK SEMENTARA UNTUK MELIHAT ERROR ==================
 if (isset($_GET['delete'])) {
-    $id_to_delete = $_GET['delete'];
-    $stmt_img = $conn->prepare("SELECT image_url FROM products WHERE id = ?");
-    $stmt_img->bind_param("i", $id_to_delete);
-    $stmt_img->execute();
-    $result_img = $stmt_img->get_result();
-    if ($result_img && $row_img = $result_img->fetch_assoc()) {
-        $image_to_delete = $row_img['image_url'];
-        if ($image_to_delete && file_exists('../images/' . $image_to_delete)) {
-            unlink('../images/' . $image_to_delete);
-        }
-    }
-    $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
-    $stmt->bind_param("i", $id_to_delete);
-    $stmt->execute();
-    header("Location: kelola_produk.php?status=deleted");
-    exit();
-}
+    $id_to_archive = $_GET['delete'];
 
+    // Coba jalankan perintah UPDATE
+    $stmt = $conn->prepare("UPDATE products SET category = 'arsip' WHERE id = ?");
+    $stmt->bind_param("i", $id_to_archive);
+
+    // Cek apakah perintah berhasil dijalankan
+    if ($stmt->execute()) {
+        // Jika berhasil, redirect seperti biasa
+        header("Location: kelola_produk.php?status=deleted");
+        exit();
+    } else {
+        // JIKA GAGAL, TAMPILKAN PESAN ERROR DATABASE DAN HENTIKAN SEMUANYA
+        echo "<div style='font-family: sans-serif; padding: 20px; border: 2px solid red; background: #ffebeb;'>";
+        echo "<h1>TERJADI ERROR DATABASE</h1>";
+        echo "<p>Perintah untuk mengarsipkan produk gagal. Ini adalah pesan error langsung dari database yang selama ini tersembunyi:</p>";
+        echo "<pre style='background:#f1f1f1; padding:15px; border:1px solid #ccc; white-space: pre-wrap; word-wrap: break-word;'>";
+        echo "Error: " . htmlspecialchars($stmt->error);
+        echo "</pre>";
+        echo "<p>Tolong salin seluruh pesan error di atas dan kirimkan ke saya. Ini adalah petunjuk yang kita butuhkan.</p>";
+        echo "</div>";
+        exit(); // Hentikan eksekusi agar kita bisa melihat errornya
+    }
+}
+// ================== AKHIR KODE DIAGNOSTIK ==================
 // Ambil data produk
-$result = $conn->query("SELECT * FROM products ORDER BY category, name");
+// GANTI BARIS LAMA ANDA DENGAN YANG INI:
+$result = $conn->query("SELECT * FROM products WHERE category != 'arsip' ORDER BY category, name");
 $products_list = [];
 if ($result) { 
     while ($row = $result->fetch_assoc()) { 
@@ -782,7 +799,11 @@ if (isset($_GET['edit'])) {
                         <option value="paket-teh" <?php if(isset($product_to_edit['category']) && $product_to_edit['category'] == 'paket-teh') echo 'selected'; ?>>
                             Paket Teh
                         </option>
-                    </select>
+
+                        <option value="pre-order" <?php if(isset($product_to_edit['category']) && $product_to_edit['category'] == 'pre-order') echo 'selected'; ?>>
+                            Pre-Order
+                        </option>
+                        </select>
                 </div>
                 
                 <div class="form-group">
@@ -1005,41 +1026,47 @@ if (isset($_GET['edit'])) {
         });
 
         // Form Submission with Loading State
-        document.getElementById('productForm').addEventListener('submit', function(e) {
-            const submitBtn = document.getElementById('submitBtn');
-            
-            // Add loading state
-            submitBtn.classList.add('loading');
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-            submitBtn.disabled = true;
-            
-            // Validate form
-            const name = document.getElementById('name').value.trim();
-            const category = document.getElementById('category').value;
-            const price = document.getElementById('price').value;
-            
-            if (!name) {
-                e.preventDefault();
-                showNotification('Nama produk harus diisi!', 'error');
-                resetSubmitButton();
-                return;
-            }
-            
-            if (!category) {
-                e.preventDefault();
-                showNotification('Kategori harus dipilih!', 'error');
-                resetSubmitButton();
-                return;
-            }
-            
-            if (!price || price <= 0) {
-                e.preventDefault();
-                showNotification('Harga harus diisi dan lebih dari 0!', 'error');
-                resetSubmitButton();
-                return;
-            }
-        });
+        // GANTI BLOK DI ATAS DENGAN INI:
 
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Add loading state
+    submitBtn.classList.add('loading');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
+    submitBtn.disabled = true;
+
+    // Validate form
+    const name = document.getElementById('name').value.trim();
+    const category = document.getElementById('category').value;
+    const price = document.getElementById('price').value;
+
+    if (!name) {
+        e.preventDefault();
+        showNotification('Nama produk harus diisi!', 'error');
+        resetSubmitButton();
+        return;
+    }
+
+    if (!category) {
+        e.preventDefault();
+        showNotification('Kategori harus dipilih!', 'error');
+        resetSubmitButton();
+        return;
+    }
+
+    // ================== PERBAIKAN DI SINI ==================
+    // Logika validasi harga hanya berjalan jika bukan pre-order
+    if (category !== 'pre-order') {
+        if (!price || price <= 0) {
+            e.preventDefault();
+            showNotification('Harga harus diisi dan lebih dari 0!', 'error');
+            resetSubmitButton();
+            return;
+        }
+    }
+    // ================== AKHIR PERBAIKAN ==================
+});
         function resetSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             const isEdit = <?php echo $product_to_edit ? 'true' : 'false'; ?>;
@@ -1228,7 +1255,39 @@ if (isset($_GET['edit'])) {
                 cancelBtnHeader.style.display = 'none';
             });
         }
+        
     });
+    // Letakkan ini di dalam tag <script> di bagian bawah file
+document.addEventListener('DOMContentLoaded', function() {
+    const categorySelect = document.getElementById('category');
+    const priceInput = document.getElementById('price');
+    const discountPercentageInput = document.getElementById('discount_percentage');
+    const discountControls = document.querySelector('.discount-controls');
+
+    function handleCategoryChange() {
+        if (categorySelect.value === 'pre-order') {
+            priceInput.value = '0';
+            priceInput.disabled = true;
+            priceInput.required = false; // Harga tidak wajib diisi
+
+            // Nonaktifkan juga kontrol diskon
+            discountPercentageInput.value = '0';
+            discountControls.style.display = 'none';
+        } else {
+            priceInput.disabled = false;
+            priceInput.required = true;
+            discountControls.style.display = 'block';
+        }
+    }
+
+    // Jalankan saat halaman dimuat
+    handleCategoryChange();
+
+    // Jalankan saat kategori diubah
+    categorySelect.addEventListener('change', handleCategoryChange);
+
+    // ... (kode lainnya yang sudah ada di dalam script tag)
+});
     </script>
 </body>
 </html>
