@@ -6,6 +6,22 @@ if (!isset($_SESSION['admin_logged_in'])) {
 }
 require_once '../config.php';
 
+// === TAMBAHKAN BLOK INI UNTUK MENANGANI NOTIFIKASI ===
+$notification_message = '';
+if (isset($_GET['status'])) {
+    if ($_GET['status'] == 'confirmed') {
+        $notification_message = 'Pembayaran berhasil dikonfirmasi!';
+    } elseif ($_GET['status'] == 'manual_order_added') {
+        $notification_message = 'Pesanan baru berhasil ditambahkan secara manual!';
+    } elseif ($_GET['status'] == 'deleted') {
+        $notification_message = 'Pesanan berhasil dihapus!';
+    }
+}
+// === AKHIR BLOK TAMBAHAN ===
+
+// Menghitung Statistik Dashboard
+// ... (kode statistik Anda yang sudah ada)
+
 // Aksi untuk Konfirmasi Pembayaran
 if (isset($_GET['action']) && $_GET['action'] == 'confirm_payment' && isset($_GET['id'])) {
     $order_id_to_confirm = $_GET['id'];
@@ -693,17 +709,18 @@ $result_orders_list = $conn->query($sql_orders_list);
             <div class="header-nav">
                 <a href="kelola_produk.php"><i class="fas fa-box"></i> Kelola Produk</a>
                 <a href="kelola_pelanggan.php"><i class="fas fa-users"></i> Kelola Pelanggan</a>
-                <a href="kelola_slider.php"><i class="fas fa-images"></i> Kelola Slider</a> 
+                <a href="kelola_slider.php"><i class="fas fa-images"></i> Kelola Slider</a>
+                <a href="tambah_pesanan.php"><i class="fas fa-plus-circle"></i> Tambah Pesanan Manual</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </div>
         
-        <?php if (isset($_GET['status']) && $_GET['status'] == 'confirmed'): ?>
+        <?php if ($notification_message): ?>
             <div class="success-message">
                 <i class="fas fa-check-circle"></i>
-                <span>Pembayaran berhasil dikonfirmasi!</span>
+                <span><?php echo $notification_message; ?></span>
             </div>
-        <?php endif; ?>
+            <?php endif; ?>
         
         <div class="stats-grid">
             <div class="stat-card">
